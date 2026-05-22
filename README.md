@@ -182,6 +182,8 @@ Para dominio propio: **Settings → Pages → Custom domain**.
 
 ## Roadmap
 
+### Fase 0 — Landing page ✅
+
 - [x] Estructura base HTML semántica
 - [x] config.json con toda la data de la clínica
 - [x] Diseño editorial navy + teal, mobile-first
@@ -202,6 +204,71 @@ Para dominio propio: **Settings → Pages → Custom domain**.
 - [ ] Google Maps embed real
 - [ ] SEO local (meta tags, Schema.org, Google Business)
 - [ ] Dominio personalizado `odontho.mx`
+
+---
+
+### Fase 1 — Recordatorios WA 📲 *(siguiente · mayor ROI, menor esfuerzo)*
+
+**Qué hace:** Mensajes automáticos 24 h y 2 h antes de cada cita. Reduce no-shows hasta un 40%. Puede pedir confirmación al paciente.
+
+**Flujo:**
+```
+Cita agendada en Google Calendar
+  → trigger 24 h antes
+  → WA: "¿Confirmas tu cita mañana a las 4:00 PM con el Dr. Castro?"
+  → paciente responde Sí / No
+  → si No → libera el slot en el calendario
+```
+
+| Opción | Stack | Esfuerzo |
+|---|---|---|
+| Sin código | Wati.io · MessageBird | Bajo |
+| Automatización | Make.com · n8n + WA Business API | Medio |
+
+---
+
+### Fase 2 — Calendario real con Google Calendar 📅
+
+**Qué hace:** El booking de la web consulta Google Calendar en tiempo real — solo muestra huecos libres. Al confirmar, crea el evento automáticamente y envía confirmación a ambos.
+
+**Flujo:**
+```
+Web consulta disponibilidad en tiempo real
+  → muestra solo huecos libres
+  → paciente elige fecha y hora
+  → se crea evento en Google Calendar
+  → confirmación automática a paciente y doctor
+```
+
+| Opción | Stack | Esfuerzo |
+|---|---|---|
+| Sin código | Embed de Cal.com (gratis) · Calendly | Bajo — reemplaza el booking actual |
+| Con backend | Google Calendar API + Supabase Edge Functions | Alto |
+
+> 💡 Recomendado empezar con **Cal.com embed** y migrar a API propia cuando haya volumen.
+
+---
+
+### Fase 3 — Agente de WhatsApp con IA 🤖
+
+**Qué hace:** Responde automáticamente cuando alguien escribe. Saluda, pregunta qué necesita, da información de servicios, agenda la cita o escala al doctor.
+
+**Flujo:**
+```
+Paciente escribe a WA
+  → agente saluda y pregunta por servicio
+  → ofrece fechas disponibles (consulta Calendar)
+  → paciente elige → confirma cita
+  → notifica al doctor
+  → escala a humano si hay duda compleja
+```
+
+| Opción | Stack | Esfuerzo |
+|---|---|---|
+| Sin código | Tidio · Respond.io · Wati.io | Bajo |
+| Con IA | WA Business API + n8n + Claude API + Supabase | Medio-alto |
+
+> ⚠️ La **WA Business API requiere aprobación de Meta** (proceso de 1–2 semanas). Iniciar el trámite antes de arrancar el desarrollo.
 
 ---
 
