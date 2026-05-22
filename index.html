@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OdonTHÓ — Dentistas Militares · Mérida, Yucatán</title>
+  <meta name="description" content="Clínica dental de especialidades con formación militar. Cirugía Maxilofacial, Odontología General y OdonTHÓ Kids en Mérida, Yucatán.">
+  <meta name="theme-color" content="#1E2D4E">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- NAVEGACIÓN -->
+  <nav id="nav" class="nav-principal">
+    <a href="#inicio" class="nav-logo">OdonT<em>H</em>Ó</a>
+    <button class="nav-menu-btn" id="menu-toggle" aria-label="Abrir menú" onclick="toggleMenu()">☰</button>
+    <div class="nav-enlaces" id="nav-enlaces">
+      <a href="#especialidades">Especialidades</a>
+      <a href="#doctores">Doctores</a>
+      <a href="#opiniones">Pacientes</a>
+      <a href="#contacto">Contacto</a>
+    </div>
+    <a href="#citas" class="btn-cta nav-cta" onclick="cerrarMenu()">📅 Agendar cita</a>
+  </nav>
+
+  <!-- HERO -->
+  <section id="inicio" class="seccion-hero">
+    <div class="hero-contenido">
+      <div class="hero-badge" id="hero-badge">⭐ Formación Militar · Especialistas Certificados</div>
+      <h1 class="hero-titulo">
+        Especialistas que<br>cuidan tu sonrisa<br><em id="hero-tagline">con precisión</em>
+      </h1>
+      <p class="hero-descripcion" id="hero-descripcion"></p>
+      <div class="hero-botones">
+        <a href="#citas" class="btn-principal">📅 Agendar cita</a>
+        <a href="#" id="hero-wa" class="btn-whatsapp" target="_blank" rel="noopener">💬 WhatsApp</a>
+      </div>
+    </div>
+    <div class="hero-visual" id="hero-visual">
+      <!-- JS: renderHeroVisual() -->
+    </div>
+  </section>
+
+  <!-- BARRA DE CONFIANZA -->
+  <div id="trust-bar" class="barra-confianza">
+    <!-- JS: renderTrustBar() -->
+  </div>
+
+  <!-- SECCIÓN CITAS (BOOKING) -->
+  <section id="citas" class="seccion-citas">
+    <div class="contenedor-seccion">
+      <div class="sec-etiqueta">Agenda tu cita</div>
+      <h2 class="sec-titulo">¿Cuándo te vemos?</h2>
+      <p class="sec-subtitulo">Elige servicio, fecha y hora — te confirmamos por WhatsApp</p>
+
+      <div class="caja-citas" id="booking-box">
+        <!-- Pestañas de pasos -->
+        <div class="pasos-tabs">
+          <div class="paso-tab activo" id="paso-tab-1"><span class="paso-num">1</span>Servicio</div>
+          <div class="paso-tab" id="paso-tab-2"><span class="paso-num">2</span>Fecha</div>
+          <div class="paso-tab" id="paso-tab-3"><span class="paso-num">3</span>Confirmar</div>
+        </div>
+
+        <!-- Paso 1: Servicios -->
+        <div class="paso-contenido" id="paso-1">
+          <div class="grilla-servicios-cita" id="servicios-cita-grid">
+            <!-- JS: renderServiciosCita() -->
+          </div>
+        </div>
+
+        <!-- Paso 2: Calendario -->
+        <div class="paso-contenido oculto" id="paso-2">
+          <div class="envoltorio-calendario">
+            <div class="mini-calendario" id="mini-calendario">
+              <!-- JS: renderCalendario() -->
+            </div>
+            <div class="columna-horarios">
+              <p class="horarios-titulo">Horarios disponibles</p>
+              <div class="grilla-horarios" id="horarios-grid">
+                <p class="slots-mensaje">Selecciona un día</p>
+              </div>
+              <div class="nota-confirmacion">✓ Confirmación inmediata por WhatsApp</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Paso 3: Confirmación -->
+        <div class="paso-contenido oculto" id="paso-3">
+          <div class="confirmacion-cita" id="confirmacion-cita">
+            <!-- JS: renderConfirmacion() -->
+          </div>
+        </div>
+
+        <!-- Footer de la caja -->
+        <div class="citas-footer" id="booking-footer">
+          <div class="citas-resumen">
+            <strong id="resumen-servicio">Selecciona un servicio</strong>
+            <span id="resumen-fecha">Elige fecha y horario</span>
+          </div>
+          <button class="btn-siguiente" id="btn-siguiente" onclick="siguientePaso()">Siguiente →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ESPECIALIDADES -->
+  <section id="especialidades" class="seccion-especialidades fondo-alt">
+    <div class="contenedor-seccion">
+      <div class="sec-etiqueta">Especialidades</div>
+      <h2 class="sec-titulo">Atención de alta especialidad</h2>
+      <p class="sec-subtitulo">Formación militar · Certificación oficial · Resultados comprobados</p>
+      <div class="grilla-especialidades" id="especialidades-grid">
+        <!-- JS: renderEspecialidades() -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section id="servicios" class="seccion-servicios">
+    <div class="contenedor-seccion">
+      <div class="sec-etiqueta">Servicios</div>
+      <h2 class="sec-titulo">Todo para tu salud dental</h2>
+      <p class="sec-subtitulo">Tratamientos de precisión · Tecnología de vanguardia</p>
+      <div class="filtros-servicios" id="filtros-servicios">
+        <!-- JS: renderFiltros() -->
+      </div>
+      <div class="grilla-servicios" id="servicios-grid">
+        <!-- JS: renderServicios() -->
+      </div>
+    </div>
+  </section>
+
+  <!-- DOCTORES -->
+  <section id="doctores" class="seccion-doctores fondo-alt">
+    <div class="contenedor-seccion">
+      <div class="sec-etiqueta">Nuestros especialistas</div>
+      <h2 class="sec-titulo">Formación Militar · Excelencia Clínica</h2>
+      <p class="sec-subtitulo">Especialistas formados en las instituciones militares de mayor prestigio de México</p>
+      <div class="grilla-doctores" id="doctores-grid">
+        <!-- JS: renderDoctores() -->
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIOS -->
+  <section id="opiniones" class="seccion-testimonios">
+    <div class="contenedor-seccion">
+      <div class="sec-etiqueta">Testimonios</div>
+      <h2 class="sec-titulo">Pacientes que confían en nosotros</h2>
+      <p class="sec-subtitulo">Reseñas verificadas de Doctoralia</p>
+      <div class="grilla-testimonios" id="testimonios-grid">
+        <!-- JS: renderTestimonios() -->
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ + FORMULARIO DE CONTACTO -->
+  <section id="contacto" class="seccion-contacto fondo-alt">
+    <div class="contenedor-seccion">
+      <div class="contacto-grilla">
+        <div class="faq-columna">
+          <div class="sec-etiqueta">Preguntas frecuentes</div>
+          <h2 class="sec-titulo">Resolvemos tus dudas</h2>
+          <div class="lista-faq" id="faq-lista">
+            <!-- JS: renderFaq() -->
+          </div>
+        </div>
+        <div class="formulario-contacto" id="contact-form">
+          <h3 class="form-titulo">¿Tienes dudas?<br>Te contactamos</h3>
+          <p class="form-subtitulo">Déjanos tus datos y te escribimos en menos de 1 hora</p>
+          <div class="form-fila">
+            <input type="text" id="form-nombre" placeholder="Tu nombre completo" autocomplete="name">
+            <input type="tel" id="form-tel" placeholder="WhatsApp / teléfono" autocomplete="tel">
+          </div>
+          <select id="form-servicio">
+            <option value="">¿Qué servicio te interesa?</option>
+          </select>
+          <button class="btn-wa-grande" id="btn-form-wa" onclick="enviarFormulario()">
+            📲 Enviar por WhatsApp — te respondemos ya
+          </button>
+          <p class="form-privacidad">🔒 Tus datos son confidenciales · Sin spam</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PIE DE PÁGINA -->
+  <footer id="footer" class="pie-pagina">
+    <div class="contenedor-seccion">
+      <div class="pie-grilla">
+        <div class="pie-marca">
+          <div class="pie-logo">OdonT<em>H</em>Ó</div>
+          <p class="pie-descripcion" id="pie-descripcion"></p>
+          <div class="pie-redes" id="pie-redes">
+            <!-- JS: renderPieRedes() -->
+          </div>
+        </div>
+        <div>
+          <div class="pie-titulo">ESPECIALIDADES</div>
+          <div class="pie-enlaces" id="pie-especialidades-links">
+            <!-- JS -->
+          </div>
+        </div>
+        <div>
+          <div class="pie-titulo">CONTACTO</div>
+          <div class="pie-enlaces" id="pie-contacto-links">
+            <!-- JS -->
+          </div>
+        </div>
+      </div>
+      <div class="pie-fondo">
+        <span id="pie-copyright">© 2026 OdonTHÓ · Todos los derechos reservados</span>
+        <a href="#" class="pie-aviso">Aviso de privacidad</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOTÓN FLOTANTE WHATSAPP -->
+  <div id="wa-float" class="boton-wa-flotante">
+    <a href="#" id="wa-float-link" target="_blank" rel="noopener" class="btn-wa-float">
+      💬 ¿Dudas? Escríbenos
+    </a>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,332 @@
+{
+  "clinica": {
+    "nombre": "OdonTHÓ",
+    "tagline": "Dentistas Militares",
+    "descripcion": "Clínica dental de especialidades con formación militar. Atención para toda la familia en Mérida, Yucatán.",
+    "telefono": "999 000 0000",
+    "whatsapp": "529990000000",
+    "email": "contacto@odontho.mx",
+    "direccion": "Av. Yucatán 351, Col. Los Pinos, Mérida, Yuc. 97138",
+    "maps_embed": "https://www.google.com/maps/embed?pb=!1m18...",
+    "horario": {
+      "lunes_viernes": "9:00 AM – 7:00 PM",
+      "sabado": "9:00 AM – 2:00 PM",
+      "domingo": "Cerrado"
+    },
+    "redes": {
+      "instagram": "https://instagram.com/odontho",
+      "facebook": "https://facebook.com/odontho",
+      "doctoralia_maxilofacial": "https://www.doctoralia.com.mx/juan-jose-castro-mosqueda/cirujano-maxilofacial-dentista-odontologo/yucatan",
+      "doctoralia_pediatra": "https://www.doctoralia.com.mx/miriam-edith-preciado-oseguera/odontologo-pediatra/yucatan"
+    }
+  },
+
+  "doctores": [
+    {
+      "id": "castro",
+      "nombre": "Dr. Juan José Castro Mosqueda",
+      "especialidad": "Cirujano Maxilofacial",
+      "cedula": "6075249 / 3454816 / 3625220",
+      "experiencia": "19 años de experiencia profesional",
+      "formacion": "Escuela Militar de Odontología · Universidad del Ejército y Fuerza Aérea",
+      "descripcion": "Especialista en Cirugía Oral y Maxilofacial con sede en el Hospital Central Militar. 10 años en la especialidad, práctica privada e institucional.",
+      "foto": "assets/dr-castro.jpg",
+      "icono_especialidad": "assets/logo-maxilofacial.png",
+      "color": "#1E2D4E",
+      "servicios_ids": ["terceros-molares", "implantes", "cirugia-ortognatica", "fracturas", "cirugia-quistes", "frenectomia", "urgencias"],
+      "horario_disponible": {
+        "lunes": ["9:00", "10:00", "11:00", "16:00", "17:00", "18:00"],
+        "martes": ["9:00", "10:00", "11:00", "16:00", "17:00", "18:00"],
+        "miercoles": ["9:00", "10:00", "11:00"],
+        "jueves": ["9:00", "10:00", "11:00", "16:00", "17:00", "18:00"],
+        "viernes": ["9:00", "10:00", "11:00", "16:00", "17:00", "18:00"],
+        "sabado": ["9:00", "10:00", "11:00"]
+      },
+      "doctoralia": "https://www.doctoralia.com.mx/juan-jose-castro-mosqueda/cirujano-maxilofacial-dentista-odontologo/yucatan",
+      "opiniones_doctoralia": 404,
+      "instagram": "https://www.instagram.com/juanjosecastromo"
+    },
+    {
+      "id": "preciado",
+      "nombre": "Dra. Miriam Edith Preciado Oseguera",
+      "especialidad": "Odontopediatra",
+      "cedula": "3454767 / 10150344",
+      "experiencia": "Más de 10 años atendiendo pacientes pediátricos",
+      "formacion": "Especialidad y Residencia en Odontopediatría · Escuela Militar de Graduados de Sanidad · SEDENA",
+      "descripcion": "Ex Jefa del Servicio de Odontopediatría del Hospital Regional de Torreón. Residente del Hospital Central Militar y Hospital Militar de Especialidades de la Mujer.",
+      "foto": "assets/dra-preciado.jpg",
+      "icono_especialidad": "assets/logo-kids.png",
+      "color": "#3DBFBF",
+      "servicios_ids": ["consulta-pediatrica", "selladores", "coronas-pediatricas", "pulpotomia", "ortopedia-dental", "odontologia-bebe", "extraccion-pediatrica"],
+      "horario_disponible": {
+        "lunes": ["10:00", "11:00", "12:00", "16:00", "17:00"],
+        "martes": ["10:00", "11:00", "12:00", "16:00", "17:00"],
+        "miercoles": ["10:00", "11:00", "12:00", "16:00", "17:00"],
+        "jueves": ["10:00", "11:00", "12:00"],
+        "viernes": ["10:00", "11:00", "12:00", "16:00", "17:00"],
+        "sabado": ["9:00", "10:00", "11:00"]
+      },
+      "doctoralia": "https://www.doctoralia.com.mx/miriam-edith-preciado-oseguera/odontologo-pediatra/yucatan",
+      "opiniones_doctoralia": 4,
+      "instagram": null
+    }
+  ],
+
+  "especialidades": [
+    {
+      "id": "maxilofacial",
+      "nombre": "Cirugía Maxilofacial",
+      "descripcion": "Cirugía oral y facial de alta especialidad. Terceros molares, implantes, fracturas y más.",
+      "icono": "assets/logo-maxilofacial.png",
+      "color": "#1E2D4E",
+      "doctor_id": "castro"
+    },
+    {
+      "id": "general",
+      "nombre": "Odontología General",
+      "descripcion": "Limpieza, blanqueamiento, resinas, endodoncia y atención dental completa para adultos.",
+      "icono": "assets/logo-general.png",
+      "color": "#1E2D4E",
+      "doctor_id": "castro"
+    },
+    {
+      "id": "kids",
+      "nombre": "OdonTHÓ Kids",
+      "descripcion": "Odontopediatría especializada. Atención empática y profesional para bebés, niños y adolescentes.",
+      "icono": "assets/logo-kids.png",
+      "color": "#3DBFBF",
+      "doctor_id": "preciado"
+    }
+  ],
+
+  "servicios": [
+    {
+      "id": "terceros-molares",
+      "nombre": "Cirugía de Terceros Molares",
+      "descripcion": "Extracción de muelas del juicio con técnica quirúrgica de precisión. Incluye valoración previa.",
+      "precio_desde": 2800,
+      "precio_texto": "Desde $2,800",
+      "especialidad_id": "maxilofacial",
+      "icono": "🦷",
+      "destacado": true
+    },
+    {
+      "id": "implantes",
+      "nombre": "Implantes Dentales",
+      "descripcion": "Implantes de titanio de grado médico con valoración incluida. Resultados permanentes.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "maxilofacial",
+      "icono": "🔩",
+      "destacado": true
+    },
+    {
+      "id": "cirugia-ortognatica",
+      "nombre": "Cirugía Ortognática",
+      "descripcion": "Corrección de deformidades de los maxilares que afectan la mordida y estética facial.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "maxilofacial",
+      "icono": "🩻",
+      "destacado": false
+    },
+    {
+      "id": "fracturas",
+      "nombre": "Fracturas Faciales",
+      "descripcion": "Atención y reparación de fracturas de mandíbula y huesos faciales.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "maxilofacial",
+      "icono": "🏥",
+      "destacado": false
+    },
+    {
+      "id": "cirugia-quistes",
+      "nombre": "Cirugía de Quistes",
+      "descripcion": "Extirpación de quistes y tumores de los maxilares con técnica mínimamente invasiva.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "maxilofacial",
+      "icono": "🔬",
+      "destacado": false
+    },
+    {
+      "id": "frenectomia",
+      "nombre": "Frenectomía",
+      "descripcion": "Corrección de frenillo lingual o labial que afecta la alimentación o el habla.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "maxilofacial",
+      "icono": "✂️",
+      "destacado": false
+    },
+    {
+      "id": "urgencias",
+      "nombre": "Urgencias Dentales",
+      "descripcion": "Atención inmediata para infecciones, abscesos, dolor agudo y traumatismos.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "maxilofacial",
+      "icono": "🚨",
+      "destacado": true
+    },
+    {
+      "id": "consulta-pediatrica",
+      "nombre": "Consulta Odontopediátrica",
+      "descripcion": "Primera visita y diagnóstico integral para bebés, niños y adolescentes.",
+      "precio_desde": 500,
+      "precio_texto": "$500",
+      "especialidad_id": "kids",
+      "icono": "👶",
+      "destacado": true
+    },
+    {
+      "id": "selladores",
+      "nombre": "Selladores de Fosetas",
+      "descripcion": "Protección preventiva en molares para evitar caries en niños.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "kids",
+      "icono": "🛡️",
+      "destacado": false
+    },
+    {
+      "id": "coronas-pediatricas",
+      "nombre": "Coronas Pediátricas",
+      "descripcion": "Coronas de acero cromo y coronas estéticas para dientes de leche dañados.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "kids",
+      "icono": "👑",
+      "destacado": false
+    },
+    {
+      "id": "pulpotomia",
+      "nombre": "Pulpotomía",
+      "descripcion": "Tratamiento de nervio en dientes de leche para evitar extracciones prematuras.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "kids",
+      "icono": "🩹",
+      "destacado": false
+    },
+    {
+      "id": "ortopedia-dental",
+      "nombre": "Ortopedia Dental",
+      "descripcion": "Aparatología temprana para guiar el crecimiento de los maxilares en niños.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "kids",
+      "icono": "😁",
+      "destacado": true
+    },
+    {
+      "id": "odontologia-bebe",
+      "nombre": "Odontología para Bebé",
+      "descripcion": "Revisión y cuidado desde la erupción del primer diente. Hábitos de higiene para padres.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "kids",
+      "icono": "🍼",
+      "destacado": false
+    },
+    {
+      "id": "extraccion-pediatrica",
+      "nombre": "Extracción Pediátrica",
+      "descripcion": "Extracción de dientes de leche y permanentes en niños con mínimo estrés.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "kids",
+      "icono": "🦷",
+      "destacado": false
+    }
+  ],
+
+  "testimonios": [
+    {
+      "nombre": "José Gamboa",
+      "texto": "Muy profesional y explica todo a detalle. Muy amable en su trato.",
+      "servicio": "Primera visita Cirugía Maxilofacial",
+      "doctor_id": "castro",
+      "fuente": "Doctoralia",
+      "fecha": "Abril 2026"
+    },
+    {
+      "nombre": "Evelyn Menéndez",
+      "texto": "Excelente trato, buena comunicación e información bien detallada.",
+      "servicio": "Primera visita Cirugía Maxilofacial",
+      "doctor_id": "castro",
+      "fuente": "Doctoralia",
+      "fecha": "Marzo 2026"
+    },
+    {
+      "nombre": "Estefanía Ravell",
+      "texto": "Excelente doctor, muy paciente con personas que tienen ansiedad y sensibilidad en la dentadura.",
+      "servicio": "Consulta de valoración",
+      "doctor_id": "castro",
+      "fuente": "Doctoralia",
+      "fecha": "Enero 2026"
+    },
+    {
+      "nombre": "Claudia",
+      "texto": "Fue muy amable en el trato con mi hija, así como clara y paciente al momento de la revisión. ¡La recomendamos ampliamente!",
+      "servicio": "Odontopediatría",
+      "doctor_id": "preciado",
+      "fuente": "Doctoralia",
+      "fecha": "Junio 2023"
+    },
+    {
+      "nombre": "Fabiola Briceño",
+      "texto": "Excelente odontopediatra, un trato muy empático con los niños y te explica muy bien el procedimiento. La recomiendo ampliamente.",
+      "servicio": "Arco lingual y palatino",
+      "doctor_id": "preciado",
+      "fuente": "Doctoralia",
+      "fecha": "Noviembre 2022"
+    },
+    {
+      "nombre": "Lucero Cárdenas",
+      "texto": "Tenemos más de 3 años acudiendo con ella, y el trato que le dio a mi niña ha sido igual de maravilloso hasta ahora.",
+      "servicio": "Seguimiento pediátrico",
+      "doctor_id": "preciado",
+      "fuente": "Doctoralia",
+      "fecha": "Agosto 2022"
+    }
+  ],
+
+  "faq": [
+    {
+      "pregunta": "¿Atienden a niños desde qué edad?",
+      "respuesta": "Desde la erupción del primer diente (6-12 meses). La Dra. Preciado atiende bebés, niños y adolescentes con un enfoque especializado y empático."
+    },
+    {
+      "pregunta": "¿Qué es la cirugía maxilofacial?",
+      "respuesta": "Es la especialidad que trata enfermedades, lesiones y defectos de la cara, boca y maxilares. El Dr. Castro tiene 10 años de experiencia en esta especialidad con formación militar."
+    },
+    {
+      "pregunta": "¿La cirugía de terceros molares duele?",
+      "respuesta": "Se realiza bajo anestesia local. La mayoría de los pacientes no sienten dolor durante el procedimiento. El postoperatorio es manejable con los medicamentos indicados."
+    },
+    {
+      "pregunta": "¿Tienen planes de financiamiento?",
+      "respuesta": "Aceptamos efectivo, tarjeta de crédito, débito y transferencia. Consulta opciones de pago directamente con nosotros al agendar tu cita."
+    },
+    {
+      "pregunta": "¿Por qué elegir dentistas con formación militar?",
+      "respuesta": "La formación militar implica estándares de disciplina, precisión y ética profesional muy exigentes. Ambos especialistas se formaron en instituciones militares de alto nivel."
+    },
+    {
+      "pregunta": "¿Cómo agendo mi cita?",
+      "respuesta": "Puedes agendar directo por WhatsApp, llenando el formulario de esta página, o llamando al consultorio. Te confirmamos en menos de 1 hora."
+    }
+  ],
+
+  "colores": {
+    "navy": "#1E2D4E",
+    "teal": "#3DBFBF",
+    "teal_light": "#E8F8F8",
+    "blanco": "#FFFFFF",
+    "crema": "#FAF8F4",
+    "gris": "#64748B",
+    "borde": "#E2DDD6"
+  }
+}
