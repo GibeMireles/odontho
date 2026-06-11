@@ -16,9 +16,26 @@
   --gris-claro: #F1EEE8;
   --borde:      #E2DDD6;
   --texto:      #1A2B3C;
+  --teal-texto: #1F8E8E; /* teal oscurecido: contraste AA para texto pequeño sobre blanco */
   --verde-wa:   #25D366;
   --verde-wa-h: #1da851;
 }
+
+/* ============================================================
+   ÍCONOS SVG INLINE
+   ============================================================ */
+
+.ic {
+  width: 1.1em;
+  height: 1.1em;
+  display: inline-block;
+  vertical-align: -0.18em;
+  flex-shrink: 0;
+}
+.ic-estrella { color: #F59E0B; }
+.ic-avatar   { width: 55%; height: 55%; color: var(--teal); }
+.ic-conf     { width: 52px; height: 52px; color: var(--verde-wa); }
+.ic-especialidad { width: 26px; height: 26px; color: var(--teal-texto); }
 
 /* ============================================================
    RESET Y BASE
@@ -542,10 +559,30 @@ input, select, button { border: none; outline: none; font-family: inherit; }
   border-color: var(--teal);
   background: var(--teal-light);
 }
-.tsc-icono { font-size: 24px; margin-bottom: 7px; display: block; }
+.tsc-icono { margin-bottom: 7px; display: block; }
+.tsc-icono .ic { width: 24px; height: 24px; color: var(--teal-texto); }
+.tarjeta-servicio-cita.activa .tsc-icono .ic { color: var(--navy); }
 .tsc-nombre { font-size: 12px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
-.tsc-precio { font-size: 11px; color: var(--teal); font-weight: 600; }
+.tsc-precio { font-size: 11px; color: var(--teal-texto); font-weight: 600; }
 .tsc-destacado .tsc-nombre::after { content: ' ★'; color: #F59E0B; font-size: 11px; }
+
+/* Botón "Ver todos los servicios" dentro del grid de citas */
+.tsc-ver-todos {
+  grid-column: 1 / -1;
+  border: 1.5px dashed var(--borde);
+  border-radius: 10px;
+  padding: 13px 12px;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gris);
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.tsc-ver-todos:hover {
+  border-color: var(--teal);
+  color: var(--teal-texto);
+  background: var(--teal-light);
+}
 
 /* Paso 2: calendario */
 .envoltorio-calendario { display: flex; flex-direction: column; gap: 20px; }
@@ -676,7 +713,7 @@ input, select, button { border: none; outline: none; font-family: inherit; }
 
 /* Paso 3: confirmación */
 .confirmacion-cita { text-align: center; padding: 40px 16px; }
-.conf-icono { font-size: 52px; margin-bottom: 14px; }
+.conf-icono { margin-bottom: 14px; }
 .conf-titulo {
   font-family: Georgia, serif;
   font-size: 26px;
@@ -775,7 +812,7 @@ input, select, button { border: none; outline: none; font-family: inherit; }
   margin-bottom: 8px;
 }
 .te-descripcion { font-size: 13px; color: var(--gris); line-height: 1.75; margin-bottom: 12px; }
-.te-doctor      { font-size: 12px; font-weight: 600; color: var(--teal); margin-bottom: 16px; }
+.te-doctor      { font-size: 12px; font-weight: 600; color: var(--teal-texto); margin-bottom: 16px; }
 
 .te-link {
   display: inline-block;
@@ -851,11 +888,12 @@ input, select, button { border: none; outline: none; font-family: inherit; }
   font-size: 22px;
   margin-bottom: 12px;
 }
+.ts-icono-wrap .ic { width: 22px; height: 22px; color: var(--teal-texto); }
 .tarjeta-servicio.destacado .ts-icono-wrap { background: rgba(61,191,191,0.22); }
 
 .ts-nombre      { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
 .ts-descripcion { font-size: 12px; color: var(--gris); line-height: 1.65; margin-bottom: 10px; display: none; }
-.ts-precio      { font-size: 13px; font-weight: 700; color: var(--teal); }
+.ts-precio      { font-size: 13px; font-weight: 700; color: var(--teal-texto); }
 
 
 /* ============================================================
@@ -1004,7 +1042,7 @@ input, select, button { border: none; outline: none; font-family: inherit; }
 
 .testimonio-nombre  { font-size: 13px; font-weight: 700; color: var(--navy); }
 .testimonio-meta    { font-size: 10px; color: var(--gris); margin-top: 2px; }
-.testimonio-servicio { font-size: 11px; color: var(--teal); font-weight: 600; margin-top: 2px; }
+.testimonio-servicio { font-size: 11px; color: var(--teal-texto); font-weight: 600; margin-top: 2px; }
 
 
 /* ============================================================
@@ -1118,6 +1156,18 @@ select {
   line-height: 1.6;
 }
 
+/* Validación del formulario */
+input.campo-error, select.campo-error {
+  border-color: #DC2626;
+  background: #FEF2F2;
+}
+.form-error-msg {
+  font-size: 12px;
+  color: #DC2626;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
 
 /* ============================================================
    PIE DE PÁGINA
@@ -1200,6 +1250,13 @@ select {
   bottom: 24px;
   right: 24px;
   z-index: 999;
+  transition: opacity 0.25s, transform 0.25s;
+}
+/* Se oculta mientras la caja de citas está visible (no tapar "Siguiente") */
+.boton-wa-flotante.wa-oculto {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
 }
 .btn-wa-float {
   display: inline-flex;
