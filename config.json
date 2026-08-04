@@ -108,7 +108,7 @@
       "precio_desde": 2800,
       "precio_texto": "Desde $2,800",
       "especialidad_id": "maxilofacial",
-      "icono": "🦷",
+      "icono": "diente",
       "destacado": true
     },
     {
@@ -118,7 +118,7 @@
       "precio_desde": null,
       "precio_texto": "Consultar precio",
       "especialidad_id": "maxilofacial",
-      "icono": "🔩",
+      "icono": "implante",
       "destacado": true
     },
     {
@@ -128,7 +128,7 @@
       "precio_desde": null,
       "precio_texto": "Consultar precio",
       "especialidad_id": "maxilofacial",
-      "icono": "🩻",
+      "icono": "escaneo",
       "destacado": false
     },
     {
@@ -138,7 +138,7 @@
       "precio_desde": null,
       "precio_texto": "Consultar precio",
       "especialidad_id": "maxilofacial",
-      "icono": "🏥",
+      "icono": "hueso",
       "destacado": false
     },
     {
@@ -148,7 +148,7 @@
       "precio_desde": null,
       "precio_texto": "Consultar precio",
       "especialidad_id": "maxilofacial",
-      "icono": "🔬",
+      "icono": "microscopio",
       "destacado": false
     },
     {
@@ -158,7 +158,7 @@
       "precio_desde": null,
       "precio_texto": "Consultar precio",
       "especialidad_id": "maxilofacial",
-      "icono": "✂️",
+      "icono": "estetoscopio",
       "destacado": false
     },
     {
@@ -168,7 +168,7 @@
       "precio_desde": null,
       "precio_texto": "Consultar precio",
       "especialidad_id": "maxilofacial",
-      "icono": "🚨",
+      "icono": "urgencia",
       "destacado": true
     },
     {
@@ -178,7 +178,7 @@
       "precio_desde": 500,
       "precio_texto": "$500",
       "especialidad_id": "kids",
-      "icono": "👶",
+      "icono": "bebe",
       "destacado": true
     },
     {
@@ -188,7 +188,7 @@
       "precio_desde": null,
       "precio_texto": "Consultar precio",
       "especialidad_id": "kids",
-      "icono": "🛡️",
+      "icono": "escudo",
       "destacado": false
     },
     {
@@ -198,7 +198,7 @@
       "precio_desde": null,
       "precio_texto": "Consultar precio",
       "especialidad_id": "kids",
-      "icono": "👑",
+      "icono": "corona",
       "destacado": false
     },
     {
@@ -208,7 +208,7 @@
       "precio_desde": null,
       "precio_texto": "Consultar precio",
       "especialidad_id": "kids",
-      "icono": "🩹",
+      "icono": "pulso",
       "destacado": false
     },
     {
@@ -218,7 +218,7 @@
       "precio_desde": null,
       "precio_texto": "Consultar precio",
       "especialidad_id": "kids",
-      "icono": "😁",
+      "icono": "sonrisa",
       "destacado": true
     },
     {
@@ -228,7 +228,7 @@
       "precio_desde": null,
       "precio_texto": "Consultar precio",
       "especialidad_id": "kids",
-      "icono": "🍼",
+      "icono": "biberon",
       "destacado": false
     },
     {
@@ -238,7 +238,7 @@
       "precio_desde": null,
       "precio_texto": "Consultar precio",
       "especialidad_id": "kids",
-      "icono": "🦷",
+      "icono": "diente",
       "destacado": false
     }
   ],

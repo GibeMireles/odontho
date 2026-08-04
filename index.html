@@ -6,6 +6,51 @@
   <title>OdonTHÓ — Dentistas Militares · Mérida, Yucatán</title>
   <meta name="description" content="Clínica dental de especialidades con formación militar. Cirugía Maxilofacial, Odontología General y OdonTHÓ Kids en Mérida, Yucatán.">
   <meta name="theme-color" content="#1E2D4E">
+  <link rel="canonical" href="https://gibemireles.github.io/odontho/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233DBFBF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 5.5C10.5 4 9 3 7 3 4 3 2 5.5 2 8.5c0 5 3 7 4 12 .3 1.5 2.5 1.5 3-.5.5-2 .5-5 3-5s2.5 3 3 5c.5 2 2.7 2 3 .5 1-5 4-7 4-12 0-3-2-5.5-5-5.5-2 0-3.5 1-5 2.5z'/%3E%3C/svg%3E">
+
+  <!-- Open Graph: vista previa al compartir por WhatsApp / redes -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="OdonTHÓ — Dentistas Militares · Mérida, Yucatán">
+  <meta property="og:description" content="Cirugía Maxilofacial, Odontología General y Odontopediatría con formación militar. Agenda tu cita por WhatsApp.">
+  <meta property="og:url" content="https://gibemireles.github.io/odontho/">
+  <meta property="og:locale" content="es_MX">
+  <meta name="twitter:card" content="summary">
+
+  <!-- Datos estructurados para Google (negocio local) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dentist",
+    "name": "OdonTHÓ",
+    "description": "Clínica dental de especialidades con formación militar: Cirugía Maxilofacial, Odontología General y Odontopediatría.",
+    "url": "https://gibemireles.github.io/odontho/",
+    "telephone": "+529990000000",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Av. Yucatán 351, Col. Los Pinos",
+      "addressLocality": "Mérida",
+      "addressRegion": "Yucatán",
+      "postalCode": "97138",
+      "addressCountry": "MX"
+    },
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+        "opens": "09:00",
+        "closes": "19:00"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": "Saturday",
+        "opens": "09:00",
+        "closes": "14:00"
+      }
+    ]
+  }
+  </script>
+
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -20,20 +65,20 @@
       <a href="#opiniones">Pacientes</a>
       <a href="#contacto">Contacto</a>
     </div>
-    <a href="#citas" class="btn-cta nav-cta" onclick="cerrarMenu()">📅 Agendar cita</a>
+    <a href="#citas" class="btn-cta nav-cta" onclick="cerrarMenu()"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg> Agendar cita</a>
   </nav>
 
   <!-- HERO -->
   <section id="inicio" class="seccion-hero">
     <div class="hero-contenido">
-      <div class="hero-badge" id="hero-badge">⭐ Formación Militar · Especialistas Certificados</div>
+      <div class="hero-badge" id="hero-badge"><svg class="ic ic-estrella" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Formación Militar · Especialistas Certificados</div>
       <h1 class="hero-titulo">
         Especialistas que<br>cuidan tu sonrisa<br><em id="hero-tagline">con precisión</em>
       </h1>
       <p class="hero-descripcion" id="hero-descripcion"></p>
       <div class="hero-botones">
-        <a href="#citas" class="btn-principal">📅 Agendar cita</a>
-        <a href="#" id="hero-wa" class="btn-whatsapp" target="_blank" rel="noopener">💬 WhatsApp</a>
+        <a href="#citas" class="btn-principal"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg> Agendar cita</a>
+        <a href="#" id="hero-wa" class="btn-whatsapp" target="_blank" rel="noopener"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg> WhatsApp</a>
       </div>
     </div>
     <div class="hero-visual" id="hero-visual">
@@ -176,9 +221,9 @@
             <option value="">¿Qué servicio te interesa?</option>
           </select>
           <button class="btn-wa-grande" id="btn-form-wa" onclick="enviarFormulario()">
-            📲 Enviar por WhatsApp — te respondemos ya
+            <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg> Enviar por WhatsApp — te respondemos ya
           </button>
-          <p class="form-privacidad">🔒 Tus datos son confidenciales · Sin spam</p>
+          <p class="form-privacidad"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Tus datos son confidenciales · Sin spam</p>
         </div>
       </div>
     </div>
@@ -220,8 +265,8 @@
 
   <!-- BOTÓN FLOTANTE WHATSAPP -->
   <div id="wa-float" class="boton-wa-flotante">
-    <a href="#" id="wa-float-link" target="_blank" rel="noopener" class="btn-wa-float">
-      💬 ¿Dudas? Escríbenos
+    <a href="#" id="wa-float-link" target="_blank" rel="noopener" class="btn-wa-float" aria-label="Escríbenos por WhatsApp">
+      <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg> ¿Dudas? Escríbenos
     </a>
   </div>
 
