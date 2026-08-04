@@ -123,10 +123,18 @@ function renderHero() {
   visual.innerHTML = tarjetas;
 }
 
-/* Intenta renderizar <img> y fallback al emoji si la imagen no existe */
+/* Intenta renderizar <img> y fallback a iniciales si la imagen no carga */
+/* Nombre + apellido paterno, ej. "Dra. Miriam Edith Preciado Oseguera" -> "MP" */
+function iniciales(nombre) {
+  const palabras = nombre.replace(/^(Dr\.|Dra\.)\s*/i, '').split(' ').filter(Boolean);
+  if (palabras.length < 2) return (palabras[0] || '').slice(0, 2).toUpperCase();
+  const apellido = palabras.length >= 3 ? palabras[palabras.length - 2] : palabras[palabras.length - 1];
+  return (palabras[0][0] + apellido[0]).toUpperCase();
+}
+
 function renderFoto(src, nombre) {
-  if (!src) return '👤';
-  return `<img src="${src}" alt="${nombre}" onerror="this.parentElement.textContent='👤'">`;
+  if (!src) return iniciales(nombre);
+  return `<img src="${src}" alt="${nombre}" onerror="this.parentElement.textContent='${iniciales(nombre)}'">`;
 }
 
 
@@ -621,12 +629,23 @@ function renderFooter() {
   /* Contacto */
   const waLink = `https://wa.me/${c.whatsapp}`;
   document.getElementById('pie-contacto-links').innerHTML = `
-    <a href="https://maps.google.com" target="_blank" rel="noopener">📍 ${c.direccion}</a>
+    <a href="${c.maps_link}" target="_blank" rel="noopener">📍 ${c.direccion}</a>
     <a href="tel:${c.telefono}">📞 ${c.telefono}</a>
     <a>🕐 Lun–Vie ${c.horario.lunes_viernes}</a>
     <a>🕐 Sáb ${c.horario.sabado}</a>
     <a href="${waLink}" target="_blank" rel="noopener">💬 WhatsApp</a>
   `;
+
+  /* Mapa */
+  const pieMapa = document.getElementById('pie-mapa');
+  if (pieMapa && c.maps_embed) {
+    pieMapa.innerHTML = `
+      <div class="pie-mapa-iframe-wrap">
+        <iframe src="${c.maps_embed}" width="100%" height="300" style="border:0" loading="lazy" allowfullscreen></iframe>
+      </div>
+      <a href="${c.maps_link}" target="_blank" rel="noopener" class="pie-mapa-btn">📍 Cómo llegar</a>
+    `;
+  }
 
   const año = new Date().getFullYear();
   document.getElementById('pie-copyright').textContent =

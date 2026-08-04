@@ -1179,6 +1179,27 @@ select {
 .pie-enlaces a { font-size: 13px; color: rgba(255,255,255,0.38); transition: color 0.15s; }
 .pie-enlaces a:hover { color: var(--teal); }
 
+.pie-mapa { margin-top: 18px; }
+.pie-mapa-iframe-wrap {
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.10);
+  margin-bottom: 12px;
+}
+.pie-mapa-iframe-wrap iframe { display: block; }
+.pie-mapa-btn {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 9px 16px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--teal);
+  border: 1px solid var(--teal);
+  transition: background 0.15s, color 0.15s;
+}
+.pie-mapa-btn:hover { background: var(--teal); color: var(--navy); }
+
 .pie-fondo {
   padding: 20px 0;
   display: flex;

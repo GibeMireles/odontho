@@ -7,7 +7,8 @@
     "whatsapp": "529990000000",
     "email": "contacto@odontho.mx",
     "direccion": "Av. Yucatán 351, Col. Los Pinos, Mérida, Yuc. 97138",
-    "maps_embed": "https://www.google.com/maps/embed?pb=!1m18...",
+    "maps_embed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.6407355922374!2d-89.58232545581969!3d21.00703364676652!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f5677635f26f0d3%3A0xa12483068eebc0a5!2sDr.%20Juan%20Jos%C3%A9%20Castro%20Mosqueda%2C%20Cirujano%20Maxilofacial!5e0!3m2!1sen!2smx!4v1785884863993!5m2!1sen!2smx",
+    "maps_link": "https://www.google.com/maps/dir/?api=1&destination=Av.+Yucat%C3%A1n+351%2C+Col.+Los+Pinos%2C+M%C3%A9rida%2C+Yuc.+97138",
     "horario": {
       "lunes_viernes": "9:00 AM – 7:00 PM",
       "sabado": "9:00 AM – 2:00 PM",
@@ -54,7 +55,7 @@
       "experiencia": "Más de 10 años atendiendo pacientes pediátricos",
       "formacion": "Especialidad y Residencia en Odontopediatría · Escuela Militar de Graduados de Sanidad · SEDENA",
       "descripcion": "Ex Jefa del Servicio de Odontopediatría del Hospital Regional de Torreón. Residente del Hospital Central Militar y Hospital Militar de Especialidades de la Mujer.",
-      "foto": "assets/dra-preciado.jpg",
+      "foto": "assets/dra-preciado.png",
       "icono_especialidad": "assets/logo-kids.png",
       "color": "#3DBFBF",
       "servicios_ids": ["consulta-pediatrica", "selladores", "coronas-pediatricas", "pulpotomia", "ortopedia-dental", "odontologia-bebe", "extraccion-pediatrica"],
