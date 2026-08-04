@@ -56,7 +56,7 @@
       "formacion": "Especialidad y Residencia en Odontopediatría · Escuela Militar de Graduados de Sanidad · SEDENA",
       "descripcion": "Ex Jefa del Servicio de Odontopediatría del Hospital Regional de Torreón. Residente del Hospital Central Militar y Hospital Militar de Especialidades de la Mujer.",
       "foto": "assets/dra-preciado.png",
-      "foto_posicion": "center 20%",
+      "foto_posicion": "center 30%",
       "icono_especialidad": "assets/logo-kids.png",
       "color": "#3DBFBF",
       "servicios_ids": ["consulta-pediatrica", "selladores", "coronas-pediatricas", "pulpotomia", "ortopedia-dental", "odontologia-bebe", "extraccion-pediatrica"],
