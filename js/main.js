@@ -155,7 +155,7 @@ function renderHero() {
       : `${icono('estrella', 'ic ic-estrella')} Doctoralia`;
     return `
       <div class="hero-tarjeta-doctor">
-        <div class="htd-avatar">${renderFoto(doc.foto, doc.nombre)}</div>
+        <div class="htd-avatar">${renderFoto(doc.foto, doc.nombre, doc.foto_posicion)}</div>
         <div class="htd-info">
           <div class="htd-nombre">${doc.nombre}</div>
           <div class="htd-especialidad">${doc.especialidad}</div>
@@ -176,9 +176,10 @@ function iniciales(nombre) {
   return (palabras[0][0] + apellido[0]).toUpperCase();
 }
 
-function renderFoto(src, nombre) {
+function renderFoto(src, nombre, posicion) {
   if (!src) return iniciales(nombre);
-  return `<img src="${src}" alt="${nombre}" onerror="this.parentElement.textContent='${iniciales(nombre)}'">`;
+  const style = posicion ? ` style="object-position:${posicion}"` : '';
+  return `<img src="${src}" alt="${nombre}"${style} onerror="this.parentElement.textContent='${iniciales(nombre)}'">`;
 }
 
 
@@ -550,7 +551,7 @@ function renderDoctores() {
       <div class="tarjeta-doctor">
         <div class="td-cabecera">
           <div class="td-foto" style="background:${doc.color}22">
-            ${renderFoto(doc.foto, doc.nombre)}
+            ${renderFoto(doc.foto, doc.nombre, doc.foto_posicion)}
           </div>
           <div class="td-info">
             <div class="td-nombre">${doc.nombre}</div>
