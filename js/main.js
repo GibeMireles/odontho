@@ -65,10 +65,7 @@ const App = {
   config: null,
   paso: 1,
   mesOffset: 0,
-  mostrarTodosServicios: false,
   seleccion: {
-    servicio:   null,
-    especialidad: null,
     doctor:     null,
     diaFecha:   null,
     diaNombre:  '',
@@ -100,7 +97,7 @@ function renderTodo() {
   renderNav();
   renderHero();
   renderTrustBar();
-  renderServiciosCita();
+  renderCalendario();
   renderEspecialidades();
   renderFiltros();
   renderServicios('todos');
@@ -210,84 +207,43 @@ function renderTrustBar() {
 
 
 /* ============================================================
-   BOOKING — PASO 1: SERVICIOS
+   BOOKING — PASO 1: FECHA Y HORARIO
+   Todas las citas son de valoración general: no se elige servicio
+   ni doctor de antemano. El calendario combina la disponibilidad
+   de ambos especialistas; cada horario indica con quién es.
    ============================================================ */
 
-function renderServiciosCita() {
-  const servicios = App.config.servicios;
-  const grid = document.getElementById('servicios-cita-grid');
-
-  /* Ordenar: destacados primero */
-  const ordenados = [...servicios].sort((a, b) => (b.destacado ? 1 : 0) - (a.destacado ? 1 : 0));
-
-  /* Mostrar solo destacados al inicio; el resto se expande con "Ver todos" */
-  const destacados = ordenados.filter(s => s.destacado);
-  const visibles = App.mostrarTodosServicios || destacados.length === 0 ? ordenados : destacados;
-  const ocultos = ordenados.length - visibles.length;
-
-  const tarjetas = visibles.map(s => `
-    <div class="tarjeta-servicio-cita ${s.destacado ? 'tsc-destacado' : ''}"
-         id="tsc-${s.id}"
-         onclick="seleccionarServicio('${s.id}')">
-      <span class="tsc-icono">${icono(s.icono)}</span>
-      <div class="tsc-nombre">${s.nombre}</div>
-      ${s.precio_desde ? `<div class="tsc-precio">${s.precio_texto}</div>` : ''}
-    </div>
-  `).join('');
-
-  const btnVerTodos = ocultos > 0
-    ? `<button class="tsc-ver-todos" onclick="verTodosServicios()">+ Ver los ${ocultos} servicios restantes</button>`
-    : '';
-
-  grid.innerHTML = tarjetas + btnVerTodos;
-
-  /* Restaurar selección previa o pre-seleccionar el primero */
-  const previo = App.seleccion.servicio;
-  seleccionarServicio(previo && visibles.some(s => s.id === previo.id) ? previo.id : visibles[0].id);
+/* Devuelve el apellido paterno de un nombre completo, ej. "Dra. Miriam Edith Preciado Oseguera" -> "Preciado" */
+function apellidoPaterno(nombre) {
+  const palabras = nombre.replace(/^(Dr\.|Dra\.)\s*/i, '').split(' ').filter(Boolean);
+  if (palabras.length < 2) return palabras[0] || '';
+  return palabras.length >= 3 ? palabras[palabras.length - 2] : palabras[palabras.length - 1];
 }
 
-function verTodosServicios() {
-  App.mostrarTodosServicios = true;
-  renderServiciosCita();
+/* Nombre corto para etiquetar horarios, ej. "Dra. Preciado" */
+function nombreCorto(doc) {
+  const prefijo = /^dra\./i.test(doc.nombre) ? 'Dra.' : /^dr\./i.test(doc.nombre) ? 'Dr.' : '';
+  return `${prefijo} ${apellidoPaterno(doc.nombre)}`.trim();
 }
 
-function seleccionarServicio(id) {
-  const servicios = App.config.servicios;
-  const servicio = servicios.find(s => s.id === id);
-  if (!servicio) return;
-
-  /* Quitar activa de todas */
-  document.querySelectorAll('.tarjeta-servicio-cita').forEach(el => el.classList.remove('activa'));
-  const el = document.getElementById(`tsc-${id}`);
-  if (el) el.classList.add('activa');
-
-  App.seleccion.servicio = servicio;
-
-  /* Determinar especialidad y doctor */
-  const especialidad = App.config.especialidades.find(e => e.id === servicio.especialidad_id);
-  App.seleccion.especialidad = especialidad || null;
-
-  if (especialidad) {
-    App.seleccion.doctor = App.config.doctores.find(d => d.id === especialidad.doctor_id) || null;
-  }
-
-  document.getElementById('resumen-servicio').textContent = servicio.precio_desde
-    ? `${servicio.nombre} — ${servicio.precio_texto}`
-    : servicio.nombre;
+function horaAMinutos(hora) {
+  const [h, m] = hora.split(':').map(Number);
+  return h * 60 + m;
 }
-
-
-/* ============================================================
-   BOOKING — PASO 2: CALENDARIO
-   ============================================================ */
 
 function renderCalendario() {
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
 
   const mes = new Date(hoy.getFullYear(), hoy.getMonth() + App.mesOffset, 1);
-  const doctor = App.seleccion.doctor;
-  const diasDisp = doctor ? Object.keys(doctor.horario_disponible).map(d => DIAS_MAP[d]) : [];
+
+  /* Un día está disponible si CUALQUIER doctor tiene horario ese día */
+  const diasDisp = new Set();
+  App.config.doctores.forEach(doc => {
+    Object.keys(doc.horario_disponible).forEach(dia => {
+      if (doc.horario_disponible[dia].length > 0) diasDisp.add(DIAS_MAP[dia]);
+    });
+  });
 
   const nombreMes = `${MESES_CAP[mes.getMonth()]} ${mes.getFullYear()}`;
   const primerDia = mes.getDay();
@@ -303,7 +259,7 @@ function renderCalendario() {
   for (let d = 1; d <= ultimoDia; d++) {
     const fecha = new Date(mes.getFullYear(), mes.getMonth(), d);
     const esPasado = fecha <= hoy;
-    const disponible = !esPasado && diasDisp.includes(fecha.getDay());
+    const disponible = !esPasado && diasDisp.has(fecha.getDay());
 
     let clase = 'cal-dia';
     if (esPasado || !disponible) clase += ' ' + (esPasado ? 'pasado' : 'no-disponible');
@@ -349,6 +305,7 @@ function seleccionarDia(timestamp) {
   const nombreDia = ['domingo','lunes','martes','miercoles','jueves','viernes','sabado'][fecha.getDay()];
   App.seleccion.diaNombre = nombreDia;
   App.seleccion.hora = null;
+  App.seleccion.doctor = null;
 
   const fechaStr = `${['dom','lun','mar','mié','jue','vie','sáb'][fecha.getDay()]} ${fecha.getDate()} de ${MESES[fecha.getMonth()]}`;
   App.seleccion.fechaTexto = fechaStr;
@@ -359,38 +316,52 @@ function seleccionarDia(timestamp) {
 }
 
 function renderHorarios() {
-  const doctor = App.seleccion.doctor;
   const fecha = App.seleccion.diaFecha;
   const grid = document.getElementById('horarios-grid');
 
-  if (!fecha || !doctor) {
+  if (!fecha) {
     grid.innerHTML = '<p class="slots-mensaje">Selecciona un día en el calendario</p>';
     return;
   }
 
-  const horarios = doctor.horario_disponible[App.seleccion.diaNombre] || [];
+  const dia = App.seleccion.diaNombre;
+  const slots = [];
+  App.config.doctores.forEach(doc => {
+    (doc.horario_disponible[dia] || []).forEach(hora => {
+      slots.push({ hora, doctorId: doc.id, doctorLabel: nombreCorto(doc) });
+    });
+  });
+  slots.sort((a, b) => horaAMinutos(a.hora) - horaAMinutos(b.hora));
 
-  if (horarios.length === 0) {
+  if (slots.length === 0) {
     grid.innerHTML = '<p class="slots-mensaje">Sin citas disponibles este día</p>';
     return;
   }
 
-  grid.innerHTML = horarios.map(h => {
-    const sel = App.seleccion.hora === h ? ' seleccionado' : '';
-    return `<div class="slot-horario disponible${sel}" onclick="seleccionarHorario('${h}')">${h}</div>`;
+  grid.innerHTML = slots.map(s => {
+    const sel = (App.seleccion.hora === s.hora && App.seleccion.doctor?.id === s.doctorId) ? ' seleccionado' : '';
+    return `
+      <div class="slot-horario disponible${sel}" onclick="seleccionarHorario('${s.hora}', '${s.doctorId}')">
+        <span class="slot-hora">${s.hora}</span>
+        <span class="slot-doctor">${s.doctorLabel}</span>
+      </div>
+    `;
   }).join('');
 }
 
-function seleccionarHorario(hora) {
+function seleccionarHorario(hora, doctorId) {
   App.seleccion.hora = hora;
+  App.seleccion.doctor = App.config.doctores.find(d => d.id === doctorId) || null;
   renderHorarios();
   actualizarResumen();
 }
 
 function actualizarResumen() {
   const s = App.seleccion;
-  const fechaLabel = s.fechaTexto ? `${s.fechaTexto}${s.hora ? ' · ' + s.hora : ''}` : 'Elige fecha y horario';
-  document.getElementById('resumen-fecha').textContent = fechaLabel;
+  document.getElementById('resumen-fecha').textContent = s.fechaTexto || 'Elige una fecha';
+  document.getElementById('resumen-hora').textContent = s.hora
+    ? `${s.hora}${s.doctor ? ' · ' + nombreCorto(s.doctor) : ''}`
+    : 'Selecciona un horario';
 }
 
 
@@ -400,18 +371,11 @@ function actualizarResumen() {
 
 function siguientePaso() {
   if (App.paso === 1) {
-    if (!App.seleccion.servicio) {
-      alert('Por favor selecciona un servicio para continuar.');
-      return;
-    }
-    irAPaso(2);
-    renderCalendario();
-  } else if (App.paso === 2) {
     if (!App.seleccion.diaFecha || !App.seleccion.hora) {
       alert('Por favor selecciona una fecha y horario para continuar.');
       return;
     }
-    irAPaso(3);
+    irAPaso(2);
     renderConfirmacion();
   }
 }
@@ -427,32 +391,86 @@ function irAPaso(num) {
   document.getElementById(`paso-${num}`).classList.remove('oculto');
   document.getElementById(`paso-tab-${num}`).classList.add('activo');
 
-  /* Ocultar botón en el paso 3 */
+  /* Ocultar botón "Siguiente" en el paso de confirmación */
   const btnSig = document.getElementById('btn-siguiente');
-  btnSig.style.display = num === 3 ? 'none' : '';
+  btnSig.style.display = num === 2 ? 'none' : '';
 
-  if (num === 3) {
+  if (num === 2) {
     document.querySelector('.citas-resumen').innerHTML =
-      '<strong>¡Todo listo!</strong><span>Te esperamos en el consultorio</span>';
+      '<strong>¡Todo listo!</strong><span>Confirma tus datos abajo</span>';
   }
 }
 
 function renderConfirmacion() {
   const s = App.seleccion;
-  const waLink = generarLinkWhatsApp();
 
   document.getElementById('confirmacion-cita').innerHTML = `
     <div class="conf-icono">${icono('check', 'ic ic-conf')}</div>
-    <h3 class="conf-titulo">¡Ya casi! Confirma por WhatsApp</h3>
+    <h3 class="conf-titulo">¡Ya casi! Confirma tu cita de valoración</h3>
     <p class="conf-detalle">
-      <strong>${s.servicio?.nombre || ''}</strong><br>
-      ${s.doctor?.nombre || ''}<br>
-      ${s.fechaTexto || ''} · ${s.hora || ''}
+      ${s.fechaTexto || ''} · ${s.hora || ''}<br>
+      ${s.doctor ? `Con ${nombreCorto(s.doctor)}` : ''}
     </p>
-    <a href="${waLink}" target="_blank" rel="noopener" class="conf-wa-btn">
-      ${icono('mensaje')} Confirmar cita por WhatsApp
-    </a>
+    <div class="form-fila">
+      <input type="text" id="booking-nombre" placeholder="Tu nombre completo" autocomplete="name">
+      <input type="tel" id="booking-tel" placeholder="WhatsApp / teléfono" autocomplete="tel">
+    </div>
+    <button class="conf-wa-btn" id="booking-btn-enviar" onclick="enviarSolicitudCita()">
+      ${icono('mensaje')} Enviar solicitud por WhatsApp
+    </button>
   `;
+}
+
+function marcarErrorBooking(input, mensaje) {
+  input.classList.add('campo-error');
+  let aviso = document.getElementById('booking-aviso-error');
+  if (!aviso) {
+    aviso = document.createElement('p');
+    aviso.id = 'booking-aviso-error';
+    aviso.className = 'form-error-msg';
+    document.getElementById('booking-btn-enviar').before(aviso);
+  }
+  aviso.textContent = mensaje;
+  input.focus();
+}
+
+function limpiarErroresBooking() {
+  document.querySelectorAll('#confirmacion-cita .campo-error').forEach(el => el.classList.remove('campo-error'));
+  const aviso = document.getElementById('booking-aviso-error');
+  if (aviso) aviso.remove();
+}
+
+function enviarSolicitudCita() {
+  limpiarErroresBooking();
+
+  const inputNombre = document.getElementById('booking-nombre');
+  const inputTel    = document.getElementById('booking-tel');
+  const nombre = inputNombre.value.trim();
+  const tel    = inputTel.value.trim();
+
+  if (nombre.length < 2) {
+    marcarErrorBooking(inputNombre, 'Por favor escribe tu nombre.');
+    return;
+  }
+
+  /* Teléfono mexicano: 10 dígitos (se ignoran espacios, guiones y +52) */
+  const soloDigitos = tel.replace(/\D/g, '').replace(/^52/, '');
+  if (soloDigitos.length !== 10) {
+    marcarErrorBooking(inputTel, 'Escribe un teléfono de 10 dígitos, ej. 999 123 4567.');
+    return;
+  }
+
+  const s = App.seleccion;
+  const mensaje = [
+    `Hola, me gustaría agendar una cita de valoración en OdonThó.`,
+    `Nombre: ${nombre}`,
+    `Fecha preferida: ${s.fechaTexto || ''}`,
+    `Hora preferida: ${s.hora || ''}`,
+    `Quedo al pendiente para confirmar. ¡Gracias!`
+  ].join('\n');
+
+  const link = `https://wa.me/${App.config.clinica.whatsapp}?text=${encodeURIComponent(mensaje)}`;
+  window.open(link, '_blank', 'noopener');
 }
 
 
@@ -767,26 +785,4 @@ function configurarWa() {
       flotante.classList.toggle('wa-oculto', entradas[0].isIntersecting);
     }, { threshold: 0.05 }).observe(booking);
   }
-}
-
-
-/* ============================================================
-   UTILIDAD — Genera link de WhatsApp para el booking
-   ============================================================ */
-
-function generarLinkWhatsApp() {
-  const s = App.seleccion;
-  const c = App.config.clinica;
-
-  const msg = [
-    `Hola, me gustaría agendar una cita:`,
-    `• Servicio: ${s.servicio?.nombre || ''}`,
-    `• Especialista: ${s.doctor?.nombre || ''}`,
-    `• Fecha: ${s.fechaTexto || ''}`,
-    `• Hora: ${s.hora || ''}`,
-    ``,
-    `¿Está disponible ese horario?`
-  ].join('\n');
-
-  return `https://wa.me/${c.whatsapp}?text=${encodeURIComponent(msg)}`;
 }
