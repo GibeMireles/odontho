@@ -6,6 +6,26 @@ Landing page para **OdonTHÓ Dentistas Militares**, clínica dental de especiali
 
 ---
 
+## Estado actual (contexto para retomar)
+
+Última sesión de trabajo: **6 de agosto de 2026**. Resumen de lo que ya está en producción:
+
+- **Booking simplificado a "cita de valoración"**: se quitó la selección de servicio. Ahora son 2 pasos — Fecha (calendario combinado de ambos doctores) → Confirmar (nombre, teléfono, envío por WhatsApp). Cada horario disponible muestra una leyenda con el doctor correspondiente (ej. "10:00 · DRA. PRECIADO").
+- **Horario real cargado**: Dr. Castro (lunes/miércoles/viernes, martes/jueves/sábado cerrado) y Dra. Preciado (ya existente).
+- **Odontología General** ahora tiene servicios reales (Limpieza Dental, Resinas y Empastes, Extracciones, Revisiones) y aplica a **ambos doctores** (`doctor_ids` en vez de `doctor_id` en `especialidades`).
+- **Foto de la Dra. Preciado** integrada con fallback a iniciales (no emoji) si no carga; `foto_posicion` en config permite ajustar el encuadre por doctor.
+- **Mapa de Google** embebido en el footer + botón "Cómo llegar" (usa el CID del negocio, no la dirección en texto — la dirección en texto geocodificaba a un lugar incorrecto).
+- **Logos reales**: ícono de cada especialidad (`assets/Icon-Maxi.png`, `Icon-KidsA.jpg`, `Icon-KidsB.png`) sin contenedor, y logo de marca real en el nav (`assets/odonTHO-logo.png`).
+- **Redes sociales reales** (Facebook e Instagram) en el footer.
+
+### Pendiente / siguiente sesión
+
+1. **WhatsApp** — hoy el flujo solo abre `wa.me` con un mensaje prellenado (el paciente debe darle "enviar" manualmente y la clínica confirma a mano). Falta decidir e implementar algo más automatizado — ver **Fase 1** del roadmap más abajo (recordatorios, o de plano WhatsApp Business API).
+2. **Correo para validar/confirmar la cita agendada** — actualmente no existe ningún flujo de confirmación por correo; falta definir de dónde sale el email del paciente (¿se agrega un campo al formulario de booking?) y qué dispara el envío (¿un backend? ¿Make/n8n? ¿EmailJS desde el propio front sin backend?).
+3. **Foto real del Dr. Castro** — sigue sin subirse (`assets/dr-castro.jpg` no existe); hoy cae al fallback de iniciales "JC".
+
+---
+
 ## Stack
 
 - HTML5 + CSS3 + JavaScript vanilla
@@ -25,13 +45,13 @@ odontho/
 │   └── styles.css      # Diseño editorial, mobile-first, ~650 líneas
 ├── js/
 │   └── main.js         # Carga config.json, renderiza todo, lógica de citas
-└── assets/             # Logos e imágenes (pendiente de agregar)
-    ├── logo-odontho.png
-    ├── logo-maxilofacial.png
-    ├── logo-kids.png
-    ├── logo-general.png
-    ├── dr-castro.jpg
-    └── dra-preciado.jpg
+└── assets/
+    ├── odonTHO-logo.png     # Logo de marca (usado en el nav)
+    ├── Icon-Maxi.png        # Ícono especialidad Cirugía Maxilofacial
+    ├── Icon-KidsA.jpg       # Ícono especialidad Odontología General
+    ├── Icon-KidsB.png       # Ícono especialidad OdonTHÓ Kids
+    ├── dra-preciado.png     # Foto Dra. Preciado
+    └── dr-castro.jpg        # ⚠️ pendiente — aún no existe, cae a fallback de iniciales "JC"
 ```
 
 ---
@@ -57,35 +77,39 @@ odontho/
 | Nav | Sticky, hamburguesa mobile, sombra al scroll |
 | Hero | Navy + 2 cols desktop, tarjetas de doctores dinámicas |
 | Trust bar | 4 stats de confianza (Doctoralia, experiencia, SEDENA) |
-| Citas | Booking 3 pasos: servicio → calendario → confirmación WhatsApp |
-| Especialidades | 3 cards con hover editorial (border-left teal) |
-| Servicios | Grid filtrable por especialidad |
+| Citas | Booking de cita de **valoración** (2 pasos): Fecha (calendario combinado de ambos doctores + horarios con leyenda de doctor) → Confirmar (nombre, teléfono, WhatsApp) |
+| Especialidades | 3 cards con hover editorial (border-left teal), íconos reales sin contenedor |
+| Servicios | Grid filtrable por especialidad — catálogo informativo, independiente del booking |
 | Doctores | Perfil completo con cédulas, formación y link a Doctoralia |
 | Testimonios | Reseñas reales de Doctoralia (Georgia italic) |
 | FAQ | Accordion con animación, textos desde config.json |
 | Contacto | Formulario → genera link wa.me con mensaje prellenado |
-| Footer | Navy, 3 columnas, redes sociales |
+| Footer | Navy, 3 columnas, redes sociales reales, mapa de Google embebido + botón "Cómo llegar" |
 | WA flotante | Botón fijo bottom-right con shadow verde |
 
 ---
 
 ## Flujo de citas (sin backend)
 
+Todas las citas agendadas por la web son de **valoración general** — no se elige servicio ni doctor de antemano.
+
 ```
-1. Usuario elige servicio
-       ↓ (determina doctor por especialidad_id → doctor_id)
-2. Calendario dinámico con días disponibles del doctor
+1. Calendario combina horario_disponible de TODOS los doctores
+       ↓ (un día se muestra disponible si cualquier doctor tiene horario ese día)
+2. Slots de horario del día elegido, uno por (doctor, hora),
+   ordenados y con leyenda del doctor correspondiente
+       ↓ (al elegir un slot se fija fecha + hora + doctor)
+3. Confirmación → captura nombre y teléfono (validado, 10 dígitos MX)
        ↓
-3. Slots de horario desde horario_disponible en config.json
+4. Genera:
+   wa.me/529990000000?text=Hola, me gustaría agendar una cita de
+   valoración... Nombre / Fecha preferida / Hora preferida
        ↓
-4. Confirmación → genera:
-   wa.me/529990000000?text=Hola, quiero agendar...
-       ↓
-5. WhatsApp abre con mensaje prellenado
-6. Clínica confirma manualmente
+5. WhatsApp abre con mensaje prellenado, el paciente lo envía
+6. Clínica confirma manualmente y asigna el doctor mostrado en el slot
 ```
 
-Sin backend. Sin base de datos. 100% estático.
+Sin backend. Sin base de datos. 100% estático. **Pendiente:** este es justo el punto donde entrarían las Fases 1–3 del roadmap (automatizar el paso 5–6 por WA y/o correo).
 
 ---
 
@@ -121,17 +145,11 @@ Toda la información de la clínica vive en `config.json`. Para actualizar:
 
 ## Agregar imágenes de doctores
 
-Guardar en `assets/` con exactamente estos nombres:
+Guardar en `assets/` y referenciar la ruta exacta en el campo `foto` de cada doctor en `config.json` (el nombre de archivo no está hardcodeado en el código, solo tiene que coincidir con lo que diga `foto`).
 
-```
-assets/dr-castro.jpg        → foto Dr. Castro (recomendado: 400×400px, JPG)
-assets/dra-preciado.jpg     → foto Dra. Preciado
-assets/logo-maxilofacial.png
-assets/logo-kids.png
-assets/logo-general.png
-```
-
-Si la imagen no existe, se muestra el emoji de fallback `👤` automáticamente.
+- Recomendado: retrato vertical, buena resolución. Si la cara no queda centrada en el recorte circular, ajusta `foto_posicion` del doctor en `config.json` (ej. `"center 40%"`) — se aplica como `object-position` del `<img>`.
+- Si la imagen no existe o no carga, se muestran automáticamente las **iniciales** del doctor (nombre + apellido paterno, ej. "MP", "JC") en vez de una foto.
+- Pendiente: subir foto real del Dr. Castro (hoy usa el fallback de iniciales).
 
 ---
 
@@ -190,8 +208,8 @@ Para dominio propio: **Settings → Pages → Custom domain**.
 - [x] Nav sticky con hamburguesa mobile
 - [x] Hero con tarjetas de doctores dinámicas
 - [x] Barra de confianza (stats Doctoralia / SEDENA)
-- [x] Booking 3 pasos → WhatsApp (sin backend)
-- [x] Calendario dinámico con horarios por doctor
+- [x] Booking de cita de valoración (2 pasos) → WhatsApp (sin backend)
+- [x] Calendario dinámico combinando horarios de todos los doctores
 - [x] Sección especialidades con filtros
 - [x] Perfiles de doctores (cédula, formación, Doctoralia)
 - [x] Testimonios reales de Doctoralia
@@ -199,11 +217,15 @@ Para dominio propio: **Settings → Pages → Custom domain**.
 - [x] Formulario de contacto → WhatsApp
 - [x] Footer + redes sociales
 - [x] GitHub Pages activo
-- [ ] Fotos reales de doctores en `assets/`
-- [ ] Logos de especialidades en `assets/`
-- [ ] Google Maps embed real
+- [x] Logos de especialidades y de marca en `assets/`
+- [x] Google Maps embed real + botón "Cómo llegar" (usando CID del negocio)
+- [x] Foto real de la Dra. Preciado
+- [x] Booking simplificado a cita de valoración (sin selección de servicio)
+- [ ] Foto real del Dr. Castro
 - [ ] SEO local (meta tags, Schema.org, Google Business)
 - [ ] Dominio personalizado `odontho.mx`
+- [ ] Confirmación de citas por correo electrónico
+- [ ] WhatsApp más allá del link `wa.me` manual (ver Fase 1)
 
 ---
 
