@@ -780,7 +780,7 @@ input, select, button { border: none; outline: none; font-family: inherit; }
   margin-bottom: 8px;
 }
 .te-descripcion { font-size: 13px; color: var(--gris); line-height: 1.75; margin-bottom: 12px; }
-.te-doctor      { font-size: 12px; font-weight: 600; color: var(--teal-texto); margin-bottom: 16px; }
+.te-doctor      { font-size: 12px; font-weight: 600; color: var(--teal-texto); line-height: 1.6; margin-bottom: 16px; }
 
 .te-link {
   display: inline-block;

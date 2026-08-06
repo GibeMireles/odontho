@@ -485,7 +485,7 @@ function renderEspecialidades() {
     const nombresDoctores = (esp.doctor_ids || [])
       .map(id => App.config.doctores.find(d => d.id === id)?.nombre)
       .filter(Boolean)
-      .join(' · ');
+      .join('<br>');
     const fallbackDiente = icono('diente', 'ic ic-especialidad').replace(/"/g, '&quot;');
     const iconoHTML = esp.icono
       ? `<img src="${esp.icono}" alt="${esp.nombre}" onerror="this.parentElement.innerHTML='${fallbackDiente}'">`
