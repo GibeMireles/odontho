@@ -32,7 +32,7 @@
       "formacion": "Escuela Militar de Odontología · Universidad del Ejército y Fuerza Aérea",
       "descripcion": "Especialista en Cirugía Oral y Maxilofacial con sede en el Hospital Central Militar. 10 años en la especialidad, práctica privada e institucional.",
       "foto": "assets/dr-castro.jpg",
-      "icono_especialidad": "assets/logo-maxilofacial.png",
+      "icono_especialidad": "assets/Icon-Maxi.png",
       "color": "#1E2D4E",
       "servicios_ids": ["terceros-molares", "implantes", "cirugia-ortognatica", "fracturas", "cirugia-quistes", "frenectomia", "urgencias"],
       "horario_disponible": {
@@ -57,7 +57,7 @@
       "descripcion": "Ex Jefa del Servicio de Odontopediatría del Hospital Regional de Torreón. Residente del Hospital Central Militar y Hospital Militar de Especialidades de la Mujer.",
       "foto": "assets/dra-preciado.png",
       "foto_posicion": "center 40%",
-      "icono_especialidad": "assets/logo-kids.png",
+      "icono_especialidad": "assets/Icon-KidsB.png",
       "color": "#3DBFBF",
       "servicios_ids": ["consulta-pediatrica", "selladores", "coronas-pediatricas", "pulpotomia", "ortopedia-dental", "odontologia-bebe", "extraccion-pediatrica"],
       "horario_disponible": {
@@ -79,7 +79,7 @@
       "id": "maxilofacial",
       "nombre": "Cirugía Maxilofacial",
       "descripcion": "Cirugía oral y facial de alta especialidad. Terceros molares, implantes, fracturas y más.",
-      "icono": "assets/logo-maxilofacial.png",
+      "icono": "assets/Icon-Maxi.png",
       "color": "#1E2D4E",
       "doctor_ids": ["castro"]
     },
@@ -87,7 +87,7 @@
       "id": "general",
       "nombre": "Odontología General",
       "descripcion": "Limpieza, blanqueamiento, resinas, endodoncia y atención dental completa para adultos.",
-      "icono": "assets/logo-general.png",
+      "icono": "assets/Icon-KidsA.jpg",
       "color": "#1E2D4E",
       "doctor_ids": ["castro", "preciado"]
     },
@@ -95,7 +95,7 @@
       "id": "kids",
       "nombre": "OdonTHÓ Kids",
       "descripcion": "Odontopediatría especializada. Atención empática y profesional para bebés, niños y adolescentes.",
-      "icono": "assets/logo-kids.png",
+      "icono": "assets/Icon-KidsB.png",
       "color": "#3DBFBF",
       "doctor_ids": ["preciado"]
     }
