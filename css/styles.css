@@ -35,7 +35,7 @@
 .ic-estrella { color: #F59E0B; }
 .ic-avatar   { width: 55%; height: 55%; color: var(--teal); }
 .ic-conf     { width: 52px; height: 52px; color: var(--verde-wa); }
-.ic-especialidad { width: 26px; height: 26px; color: var(--teal-texto); }
+.ic-especialidad { width: 38px; height: 38px; color: var(--teal-texto); }
 
 /* ============================================================
    RESET Y BASE
@@ -756,18 +756,14 @@ input, select, button { border: none; outline: none; font-family: inherit; }
 }
 
 .te-icono {
-  width: 48px;
-  height: 48px;
-  background: var(--teal-light);
-  border-radius: 10px;
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 24px;
   margin-bottom: 18px;
-  overflow: hidden;
 }
-.te-icono img { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+.te-icono img { width: 100%; height: 100%; object-fit: contain; }
 
 .te-nombre {
   font-family: Georgia, serif;
