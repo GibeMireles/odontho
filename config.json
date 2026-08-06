@@ -81,7 +81,7 @@
       "descripcion": "Cirugía oral y facial de alta especialidad. Terceros molares, implantes, fracturas y más.",
       "icono": "assets/logo-maxilofacial.png",
       "color": "#1E2D4E",
-      "doctor_id": "castro"
+      "doctor_ids": ["castro"]
     },
     {
       "id": "general",
@@ -89,7 +89,7 @@
       "descripcion": "Limpieza, blanqueamiento, resinas, endodoncia y atención dental completa para adultos.",
       "icono": "assets/logo-general.png",
       "color": "#1E2D4E",
-      "doctor_id": "castro"
+      "doctor_ids": ["castro", "preciado"]
     },
     {
       "id": "kids",
@@ -97,7 +97,7 @@
       "descripcion": "Odontopediatría especializada. Atención empática y profesional para bebés, niños y adolescentes.",
       "icono": "assets/logo-kids.png",
       "color": "#3DBFBF",
-      "doctor_id": "preciado"
+      "doctor_ids": ["preciado"]
     }
   ],
 
@@ -170,6 +170,46 @@
       "precio_texto": "Consultar precio",
       "especialidad_id": "maxilofacial",
       "icono": "urgencia",
+      "destacado": true
+    },
+    {
+      "id": "limpieza-dental",
+      "nombre": "Limpieza Dental",
+      "descripcion": "Retiro de sarro y placa.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "general",
+      "icono": "escudo",
+      "destacado": true
+    },
+    {
+      "id": "resinas-empastes",
+      "nombre": "Resinas y Empastes",
+      "descripcion": "Reparación de caries.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "general",
+      "icono": "corona",
+      "destacado": false
+    },
+    {
+      "id": "extracciones",
+      "nombre": "Extracciones",
+      "descripcion": "Retiro de piezas dañadas.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "general",
+      "icono": "diente",
+      "destacado": false
+    },
+    {
+      "id": "revisiones",
+      "nombre": "Revisiones",
+      "descripcion": "Diagnóstico general y prevención.",
+      "precio_desde": null,
+      "precio_texto": "Consultar precio",
+      "especialidad_id": "general",
+      "icono": "escaneo",
       "destacado": true
     },
     {

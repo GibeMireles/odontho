@@ -482,7 +482,10 @@ function renderEspecialidades() {
   const grid = document.getElementById('especialidades-grid');
 
   grid.innerHTML = App.config.especialidades.map(esp => {
-    const doctor = App.config.doctores.find(d => d.id === esp.doctor_id);
+    const nombresDoctores = (esp.doctor_ids || [])
+      .map(id => App.config.doctores.find(d => d.id === id)?.nombre)
+      .filter(Boolean)
+      .join(' · ');
     const fallbackDiente = icono('diente', 'ic ic-especialidad').replace(/"/g, '&quot;');
     const iconoHTML = esp.icono
       ? `<img src="${esp.icono}" alt="${esp.nombre}" onerror="this.parentElement.innerHTML='${fallbackDiente}'">`
@@ -493,7 +496,7 @@ function renderEspecialidades() {
         <div class="te-icono">${iconoHTML}</div>
         <div class="te-nombre">${esp.nombre}</div>
         <p class="te-descripcion">${esp.descripcion}</p>
-        ${doctor ? `<div class="te-doctor">${doctor.nombre}</div>` : ''}
+        ${nombresDoctores ? `<div class="te-doctor">${nombresDoctores}</div>` : ''}
         <a href="#servicios" class="te-link" onclick="filtrarServicios(null,'${esp.id}')">
           Ver servicios →
         </a>
