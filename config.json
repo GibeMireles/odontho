@@ -37,11 +37,11 @@
       "servicios_ids": ["terceros-molares", "implantes", "cirugia-ortognatica", "fracturas", "cirugia-quistes", "frenectomia", "urgencias"],
       "horario_disponible": {
         "lunes": ["9:00", "10:00", "11:00", "16:00", "17:00", "18:00"],
-        "martes": ["9:00", "10:00", "11:00", "16:00", "17:00", "18:00"],
-        "miercoles": ["9:00", "10:00", "11:00"],
-        "jueves": ["9:00", "10:00", "11:00", "16:00", "17:00", "18:00"],
-        "viernes": ["9:00", "10:00", "11:00", "16:00", "17:00", "18:00"],
-        "sabado": ["9:00", "10:00", "11:00"]
+        "martes": [],
+        "miercoles": ["9:00", "10:00", "11:00", "12:00", "16:00", "17:00", "18:00"],
+        "jueves": [],
+        "viernes": ["9:00", "10:00", "11:00", "12:00", "16:00", "17:00", "18:00"],
+        "sabado": []
       },
       "doctoralia": "https://www.doctoralia.com.mx/juan-jose-castro-mosqueda/cirujano-maxilofacial-dentista-odontologo/yucatan",
       "opiniones_doctoralia": 404,
