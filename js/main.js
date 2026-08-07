@@ -479,6 +479,12 @@ function irAPaso(num) {
   if (num === 2) {
     document.querySelector('.citas-resumen').innerHTML =
       '<strong>¡Todo listo!</strong><span>Confirma tus datos abajo</span>';
+  } else {
+    /* Restaurar el resumen normal (resumen-fecha/resumen-hora) al volver del Paso 2,
+       ej. cuando volverAPaso1ConError() manda de regreso tras un horario ocupado */
+    document.querySelector('.citas-resumen').innerHTML =
+      '<strong id="resumen-fecha">Elige una fecha</strong><span id="resumen-hora">Selecciona un horario</span>';
+    actualizarResumen();
   }
 }
 
@@ -520,7 +526,19 @@ function limpiarErroresBooking() {
   if (aviso) aviso.remove();
 }
 
-function enviarSolicitudCita() {
+/* Mensaje genérico de error de envío (sin marcar ningún campo como inválido) */
+function mostrarAvisoEnvio(mensaje) {
+  let aviso = document.getElementById('booking-aviso-error');
+  if (!aviso) {
+    aviso = document.createElement('p');
+    aviso.id = 'booking-aviso-error';
+    aviso.className = 'form-error-msg';
+    document.getElementById('booking-btn-enviar').before(aviso);
+  }
+  aviso.textContent = mensaje;
+}
+
+async function enviarSolicitudCita() {
   limpiarErroresBooking();
 
   const inputNombre = document.getElementById('booking-nombre');
@@ -541,6 +559,38 @@ function enviarSolicitudCita() {
   }
 
   const s = App.seleccion;
+  const btn = document.getElementById('booking-btn-enviar');
+  const textoOriginal = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = 'Agendando…';
+
+  try {
+    const res = await fetch(App.config.clinica.calendar_api_url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        action: 'agendar',
+        nombre,
+        telefono: soloDigitos,
+        fecha: fechaISO(s.diaFecha),
+        hora: s.hora
+      })
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    const data = await res.json();
+    if (!data.ok) {
+      volverAPaso1ConError(data.error || 'Ese horario acaba de ocuparse, elige otro.');
+      return;
+    }
+  } catch (e) {
+    console.error('OdonTHÓ — error agendando cita:', e);
+    btn.disabled = false;
+    btn.innerHTML = textoOriginal;
+    mostrarAvisoEnvio('No pudimos agendar tu cita. Inténtalo de nuevo o escríbenos por WhatsApp.');
+    return;
+  }
+
   const mensaje = [
     `Hola, me gustaría agendar una cita de valoración en OdonThó.`,
     `Nombre: ${nombre}`,
@@ -551,6 +601,15 @@ function enviarSolicitudCita() {
 
   const link = `https://wa.me/${App.config.clinica.whatsapp}?text=${encodeURIComponent(mensaje)}`;
   window.open(link, '_blank', 'noopener');
+}
+
+/* La cita ya no se pudo agendar (ok:false, ej. alguien más tomó el horario):
+   vuelve al Paso 1, refresca disponibilidad real y avisa al usuario */
+function volverAPaso1ConError(mensaje) {
+  App.seleccion.hora = null;
+  irAPaso(1);
+  mostrarAvisoPaso1(mensaje);
+  fetchDisponibilidad();
 }
 
 
