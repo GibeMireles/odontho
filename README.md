@@ -8,10 +8,11 @@ Landing page para **OdonTHÓ Dentistas Militares**, clínica dental de especiali
 
 ## Estado actual (contexto para retomar)
 
-Última sesión de trabajo: **6 de agosto de 2026**. Resumen de lo que ya está en producción:
+Última sesión de trabajo: **7 de agosto de 2026**. Resumen de lo que ya está en producción:
 
-- **Booking simplificado a "cita de valoración"**: se quitó la selección de servicio. Ahora son 2 pasos — Fecha (calendario combinado de ambos doctores) → Confirmar (nombre, teléfono, envío por WhatsApp). Cada horario disponible muestra una leyenda con el doctor correspondiente (ej. "10:00 · DRA. PRECIADO").
-- **Horario real cargado**: Dr. Castro (lunes/miércoles/viernes, martes/jueves/sábado cerrado) y Dra. Preciado (ya existente).
+- **Booking conectado a Google Calendar real vía Apps Script**: el Paso 1 (Fecha) ya no usa `horario_disponible` de los doctores — hace `fetch` a `clinica.calendar_api_url` (`?action=disponibilidad`) y solo muestra como disponibles las fechas/horarios que devuelve el Calendar real, con loader mientras carga y fallback a WhatsApp si el fetch falla. Al confirmar, el Paso 2 hace `POST` (`action=agendar`) al mismo Apps Script para crear el evento ("SIN CONFIRMAR") antes de abrir WhatsApp; si el horario ya se ocupó, regresa al Paso 1 con aviso y refresca la disponibilidad. `horario_disponible` de los doctores en `config.json` queda solo de referencia, sin uso activo. Ya no se muestra el doctor por horario (el Apps Script no lo informa).
+- **Booking simplificado a "cita de valoración"**: se quitó la selección de servicio. Son 2 pasos — Fecha → Confirmar (nombre, teléfono, envío por WhatsApp).
+- **Horario real cargado**: Dr. Castro (lunes/miércoles/viernes, martes/jueves/sábado cerrado) y Dra. Preciado (ya existente) — ahora de referencia, ver punto anterior.
 - **Odontología General** ahora tiene servicios reales (Limpieza Dental, Resinas y Empastes, Extracciones, Revisiones) y aplica a **ambos doctores** (`doctor_ids` en vez de `doctor_id` en `especialidades`).
 - **Foto de la Dra. Preciado** integrada con fallback a iniciales (no emoji) si no carga; `foto_posicion` en config permite ajustar el encuadre por doctor.
 - **Mapa de Google** embebido en el footer + botón "Cómo llegar" (usa el CID del negocio, no la dirección en texto — la dirección en texto geocodificaba a un lugar incorrecto).
@@ -20,7 +21,7 @@ Landing page para **OdonTHÓ Dentistas Militares**, clínica dental de especiali
 
 ### Pendiente / siguiente sesión
 
-1. **WhatsApp** — hoy el flujo solo abre `wa.me` con un mensaje prellenado (el paciente debe darle "enviar" manualmente y la clínica confirma a mano). Falta decidir e implementar algo más automatizado — ver **Fase 1** del roadmap más abajo (recordatorios, o de plano WhatsApp Business API).
+1. **WhatsApp más allá de la confirmación inicial** — el evento ya se crea solo en Calendar al agendar, pero el paso de WhatsApp sigue siendo manual (`wa.me` con mensaje prellenado; el paciente le da "enviar"). Falta decidir e implementar recordatorios/confirmaciones automáticas — ver **Fase 1** del roadmap más abajo.
 2. **Correo para validar/confirmar la cita agendada** — actualmente no existe ningún flujo de confirmación por correo; falta definir de dónde sale el email del paciente (¿se agrega un campo al formulario de booking?) y qué dispara el envío (¿un backend? ¿Make/n8n? ¿EmailJS desde el propio front sin backend?).
 3. **Foto real del Dr. Castro** — sigue sin subirse (`assets/dr-castro.jpg` no existe); hoy cae al fallback de iniciales "JC".
 
@@ -89,27 +90,35 @@ odontho/
 
 ---
 
-## Flujo de citas (sin backend)
+## Flujo de citas (Google Calendar vía Apps Script)
 
-Todas las citas agendadas por la web son de **valoración general** — no se elige servicio ni doctor de antemano.
+Todas las citas agendadas por la web son de **valoración general** — no se elige servicio ni doctor de antemano. La disponibilidad y la creación del evento las maneja un Google Apps Script Web App externo (no vive en este repo); la URL está en `config.json` → `clinica.calendar_api_url`.
 
 ```
-1. Calendario combina horario_disponible de TODOS los doctores
-       ↓ (un día se muestra disponible si cualquier doctor tiene horario ese día)
-2. Slots de horario del día elegido, uno por (doctor, hora),
-   ordenados y con leyenda del doctor correspondiente
-       ↓ (al elegir un slot se fija fecha + hora + doctor)
+1. Al cargar la página: GET {calendar_api_url}?action=disponibilidad
+       ↓ { ok:true, dias:[{fecha:"YYYY-MM-DD", slots:["10:00",...]}, ...] }
+       ↓ (loader mientras carga; si falla, mensaje + botón de WhatsApp)
+2. Calendario solo marca como disponibles las fechas que trae el Calendar real
+       ↓ (al elegir un día, se listan sus slots — ya no se etiqueta el doctor,
+          el Apps Script no lo informa)
 3. Confirmación → captura nombre y teléfono (validado, 10 dígitos MX)
        ↓
-4. Genera:
+4. POST {calendar_api_url} con
+   { action:'agendar', nombre, telefono, fecha:"YYYY-MM-DD", hora:"HH:mm" }
+   (Content-Type: text/plain;charset=utf-8 para evitar preflight CORS)
+       ↓
+   ok:true  → crea el evento en Calendar ("SIN CONFIRMAR") y sigue al paso 5
+   ok:false → banner de error, vuelve al Paso 1 y refresca disponibilidad
+       ↓
+5. Genera:
    wa.me/529990000000?text=Hola, me gustaría agendar una cita de
    valoración... Nombre / Fecha preferida / Hora preferida
        ↓
-5. WhatsApp abre con mensaje prellenado, el paciente lo envía
-6. Clínica confirma manualmente y asigna el doctor mostrado en el slot
+6. WhatsApp abre con mensaje prellenado, el paciente lo envía
+7. Clínica confirma manualmente la cita "SIN CONFIRMAR" en Calendar
 ```
 
-Sin backend. Sin base de datos. 100% estático. **Pendiente:** este es justo el punto donde entrarían las Fases 1–3 del roadmap (automatizar el paso 5–6 por WA y/o correo).
+Sin backend propio. Sin base de datos propia. El front-end sigue siendo 100% estático — solo habla con el Apps Script externo. **Pendiente:** automatizar el paso 6–7 por WA y/o correo (Fases 1–3 del roadmap).
 
 ---
 
@@ -122,13 +131,14 @@ Toda la información de la clínica vive en `config.json`. Para actualizar:
   "clinica": {
     "telefono": "999 000 0000",   // ← cambiar aquí
     "whatsapp": "529990000000",   // formato: 52 + 10 dígitos, sin +
+    "calendar_api_url": "https://script.google.com/macros/s/.../exec", // ← Apps Script del booking
     "horario": { ... }
   },
   "doctores": [
     {
       "horario_disponible": {
-        "lunes": ["9:00", "10:00", "11:00"],  // ← slots reales del doctor
-        ...
+        "lunes": ["9:00", "10:00", "11:00"],  // ← de referencia; el booking ya NO lee esto
+        ...                                    //   (la disponibilidad real la da calendar_api_url)
       }
     }
   ],
@@ -208,8 +218,9 @@ Para dominio propio: **Settings → Pages → Custom domain**.
 - [x] Nav sticky con hamburguesa mobile
 - [x] Hero con tarjetas de doctores dinámicas
 - [x] Barra de confianza (stats Doctoralia / SEDENA)
-- [x] Booking de cita de valoración (2 pasos) → WhatsApp (sin backend)
-- [x] Calendario dinámico combinando horarios de todos los doctores
+- [x] Booking de cita de valoración (2 pasos) → WhatsApp
+- [x] Calendario dinámico combinando horarios de todos los doctores (histórico; superado por el punto siguiente)
+- [x] Booking conectado a Google Calendar real vía Apps Script — disponibilidad real y creación de evento al agendar (ver Fase 2)
 - [x] Sección especialidades con filtros
 - [x] Perfiles de doctores (cédula, formación, Doctoralia)
 - [x] Testimonios reales de Doctoralia
@@ -249,9 +260,11 @@ Cita agendada en Google Calendar
 
 ---
 
-### Fase 2 — Calendario real con Google Calendar 📅
+### Fase 2 — Calendario real con Google Calendar 📅 ✅ *(implementado — 7 de agosto de 2026)*
 
-**Qué hace:** El booking de la web consulta Google Calendar en tiempo real — solo muestra huecos libres. Al confirmar, crea el evento automáticamente y envía confirmación a ambos.
+**Qué hace:** El booking de la web consulta Google Calendar en tiempo real — solo muestra huecos libres. Al confirmar, crea el evento automáticamente ("SIN CONFIRMAR").
+
+**Cómo quedó implementado:** Google Apps Script Web App (fuera de este repo) expone `GET ?action=disponibilidad` y `POST action=agendar`; la URL vive en `config.json` → `clinica.calendar_api_url`. Ver la sección "Flujo de citas" más arriba para el detalle. **Pendiente dentro de esta fase:** confirmación automática al paciente y al doctor tras crear el evento (hoy solo se abre WhatsApp con el link manual — eso es Fase 1/3).
 
 **Flujo:**
 ```
@@ -259,15 +272,8 @@ Web consulta disponibilidad en tiempo real
   → muestra solo huecos libres
   → paciente elige fecha y hora
   → se crea evento en Google Calendar
-  → confirmación automática a paciente y doctor
+  → (pendiente) confirmación automática a paciente y doctor
 ```
-
-| Opción | Stack | Esfuerzo |
-|---|---|---|
-| Sin código | Embed de Cal.com (gratis) · Calendly | Bajo — reemplaza el booking actual |
-| Con backend | Google Calendar API + Supabase Edge Functions | Alto |
-
-> 💡 Recomendado empezar con **Cal.com embed** y migrar a API propia cuando haya volumen.
 
 ---
 
