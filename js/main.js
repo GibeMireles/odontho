@@ -65,10 +65,13 @@ const App = {
   config: null,
   paso: 1,
   mesOffset: 0,
+  disponibilidad: null,          // array [{fecha:"YYYY-MM-DD", slots:["10:00",...]}] desde Apps Script
+  disponibilidadCargando: true,
+  disponibilidadError: false,
   seleccion: {
-    doctor:     null,
     diaFecha:   null,
     diaNombre:  '',
+    fechaTexto: '',
     hora:       null
   }
 };
@@ -84,6 +87,7 @@ async function init() {
     if (!res.ok) throw new Error('No se pudo cargar config.json');
     App.config = await res.json();
     renderTodo();
+    fetchDisponibilidad();
   } catch (e) {
     console.error('OdonTHÓ — error cargando config:', e);
     document.body.innerHTML = `<div style="padding:40px;text-align:center;font-family:Arial">
@@ -97,7 +101,7 @@ function renderTodo() {
   renderNav();
   renderHero();
   renderTrustBar();
-  renderCalendario();
+  renderPaso1();
   renderEspecialidades();
   renderFiltros();
   renderServicios('todos');
@@ -209,26 +213,100 @@ function renderTrustBar() {
 /* ============================================================
    BOOKING — PASO 1: FECHA Y HORARIO
    Todas las citas son de valoración general: no se elige servicio
-   ni doctor de antemano. El calendario combina la disponibilidad
-   de ambos especialistas; cada horario indica con quién es.
+   ni doctor de antemano. La disponibilidad viene de Google Calendar
+   vía Apps Script (App.config.clinica.calendar_api_url) — ya no de
+   horario_disponible en config.json (que queda solo de referencia).
    ============================================================ */
-
-/* Devuelve el apellido paterno de un nombre completo, ej. "Dra. Miriam Edith Preciado Oseguera" -> "Preciado" */
-function apellidoPaterno(nombre) {
-  const palabras = nombre.replace(/^(Dr\.|Dra\.)\s*/i, '').split(' ').filter(Boolean);
-  if (palabras.length < 2) return palabras[0] || '';
-  return palabras.length >= 3 ? palabras[palabras.length - 2] : palabras[palabras.length - 1];
-}
-
-/* Nombre corto para etiquetar horarios, ej. "Dra. Preciado" */
-function nombreCorto(doc) {
-  const prefijo = /^dra\./i.test(doc.nombre) ? 'Dra.' : /^dr\./i.test(doc.nombre) ? 'Dr.' : '';
-  return `${prefijo} ${apellidoPaterno(doc.nombre)}`.trim();
-}
 
 function horaAMinutos(hora) {
   const [h, m] = hora.split(':').map(Number);
   return h * 60 + m;
+}
+
+/* Formatea un Date como "YYYY-MM-DD" en hora LOCAL (no usar toISOString: desfasa un día cerca de medianoche por UTC) */
+function fechaISO(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+/* Trae la disponibilidad real desde el Apps Script y repinta el Paso 1 */
+async function fetchDisponibilidad() {
+  App.disponibilidadCargando = true;
+  App.disponibilidadError = false;
+  renderPaso1();
+
+  try {
+    const base = App.config.clinica.calendar_api_url;
+    const res = await fetch(`${base}?action=disponibilidad`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    if (!data.ok) throw new Error(data.error || 'Respuesta inválida del Apps Script');
+    App.disponibilidad = data.dias || [];
+    App.disponibilidadCargando = false;
+  } catch (e) {
+    console.error('OdonTHÓ — error cargando disponibilidad:', e);
+    App.disponibilidad = null;
+    App.disponibilidadCargando = false;
+    App.disponibilidadError = true;
+  }
+
+  renderPaso1();
+}
+
+/* Markup normal del Paso 1 (calendario + columna de horarios) */
+function envoltorioCalendarioHTML() {
+  return `
+    <div class="mini-calendario" id="mini-calendario"></div>
+    <div class="columna-horarios">
+      <p class="horarios-titulo">Horarios disponibles</p>
+      <div class="grilla-horarios" id="horarios-grid">
+        <p class="slots-mensaje">Selecciona un día</p>
+      </div>
+      <div class="nota-confirmacion">✓ Confirmación inmediata por WhatsApp</div>
+    </div>
+  `;
+}
+
+function calendarioLoaderHTML() {
+  return `
+    <div class="disponibilidad-estado">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Cargando horarios disponibles…</p>
+    </div>
+  `;
+}
+
+function calendarioErrorHTML() {
+  const mensajeWa = 'Hola, me gustaría agendar una cita de valoración. ¿Me ayudan con la disponibilidad?';
+  const link = `https://wa.me/${App.config.clinica.whatsapp}?text=${encodeURIComponent(mensajeWa)}`;
+  return `
+    <div class="disponibilidad-estado disponibilidad-error">
+      <p>No pudimos cargar los horarios, escríbenos por WhatsApp</p>
+      <a href="${link}" target="_blank" rel="noopener" class="conf-wa-btn">
+        ${icono('mensaje')} Escríbenos por WhatsApp
+      </a>
+    </div>
+  `;
+}
+
+/* Decide qué mostrar en #envoltorio-calendario según el estado de la disponibilidad */
+function renderPaso1() {
+  const envoltorio = document.getElementById('envoltorio-calendario');
+
+  if (App.disponibilidadCargando) {
+    envoltorio.innerHTML = calendarioLoaderHTML();
+    return;
+  }
+  if (App.disponibilidadError) {
+    envoltorio.innerHTML = calendarioErrorHTML();
+    return;
+  }
+
+  envoltorio.innerHTML = envoltorioCalendarioHTML();
+  renderCalendario();
+  renderHorarios();
 }
 
 function renderCalendario() {
@@ -237,13 +315,12 @@ function renderCalendario() {
 
   const mes = new Date(hoy.getFullYear(), hoy.getMonth() + App.mesOffset, 1);
 
-  /* Un día está disponible si CUALQUIER doctor tiene horario ese día */
-  const diasDisp = new Set();
-  App.config.doctores.forEach(doc => {
-    Object.keys(doc.horario_disponible).forEach(dia => {
-      if (doc.horario_disponible[dia].length > 0) diasDisp.add(DIAS_MAP[dia]);
-    });
-  });
+  /* Un día está disponible si el Apps Script devolvió slots para esa fecha */
+  const diasDisponibles = new Set(
+    (App.disponibilidad || [])
+      .filter(d => (d.slots || []).length > 0)
+      .map(d => d.fecha)
+  );
 
   const nombreMes = `${MESES_CAP[mes.getMonth()]} ${mes.getFullYear()}`;
   const primerDia = mes.getDay();
@@ -259,7 +336,7 @@ function renderCalendario() {
   for (let d = 1; d <= ultimoDia; d++) {
     const fecha = new Date(mes.getFullYear(), mes.getMonth(), d);
     const esPasado = fecha <= hoy;
-    const disponible = !esPasado && diasDisp.has(fecha.getDay());
+    const disponible = !esPasado && diasDisponibles.has(fechaISO(fecha));
 
     let clase = 'cal-dia';
     if (esPasado || !disponible) clase += ' ' + (esPasado ? 'pasado' : 'no-disponible');
@@ -305,11 +382,11 @@ function seleccionarDia(timestamp) {
   const nombreDia = ['domingo','lunes','martes','miercoles','jueves','viernes','sabado'][fecha.getDay()];
   App.seleccion.diaNombre = nombreDia;
   App.seleccion.hora = null;
-  App.seleccion.doctor = null;
 
   const fechaStr = `${['dom','lun','mar','mié','jue','vie','sáb'][fecha.getDay()]} ${fecha.getDate()} de ${MESES[fecha.getMonth()]}`;
   App.seleccion.fechaTexto = fechaStr;
 
+  ocultarAvisoPaso1();
   renderCalendario();
   renderHorarios();
   actualizarResumen();
@@ -324,34 +401,27 @@ function renderHorarios() {
     return;
   }
 
-  const dia = App.seleccion.diaNombre;
-  const slots = [];
-  App.config.doctores.forEach(doc => {
-    (doc.horario_disponible[dia] || []).forEach(hora => {
-      slots.push({ hora, doctorId: doc.id, doctorLabel: nombreCorto(doc) });
-    });
-  });
-  slots.sort((a, b) => horaAMinutos(a.hora) - horaAMinutos(b.hora));
+  const diaData = (App.disponibilidad || []).find(d => d.fecha === fechaISO(fecha));
+  const slots = ((diaData && diaData.slots) || []).slice().sort((a, b) => horaAMinutos(a) - horaAMinutos(b));
 
   if (slots.length === 0) {
     grid.innerHTML = '<p class="slots-mensaje">Sin citas disponibles este día</p>';
     return;
   }
 
-  grid.innerHTML = slots.map(s => {
-    const sel = (App.seleccion.hora === s.hora && App.seleccion.doctor?.id === s.doctorId) ? ' seleccionado' : '';
+  grid.innerHTML = slots.map(hora => {
+    const sel = App.seleccion.hora === hora ? ' seleccionado' : '';
     return `
-      <div class="slot-horario disponible${sel}" onclick="seleccionarHorario('${s.hora}', '${s.doctorId}')">
-        <span class="slot-hora">${s.hora}</span>
-        <span class="slot-doctor">${s.doctorLabel}</span>
+      <div class="slot-horario disponible${sel}" onclick="seleccionarHorario('${hora}')">
+        <span class="slot-hora">${hora}</span>
       </div>
     `;
   }).join('');
 }
 
-function seleccionarHorario(hora, doctorId) {
+function seleccionarHorario(hora) {
   App.seleccion.hora = hora;
-  App.seleccion.doctor = App.config.doctores.find(d => d.id === doctorId) || null;
+  ocultarAvisoPaso1();
   renderHorarios();
   actualizarResumen();
 }
@@ -359,9 +429,20 @@ function seleccionarHorario(hora, doctorId) {
 function actualizarResumen() {
   const s = App.seleccion;
   document.getElementById('resumen-fecha').textContent = s.fechaTexto || 'Elige una fecha';
-  document.getElementById('resumen-hora').textContent = s.hora
-    ? `${s.hora}${s.doctor ? ' · ' + nombreCorto(s.doctor) : ''}`
-    : 'Selecciona un horario';
+  document.getElementById('resumen-hora').textContent = s.hora || 'Selecciona un horario';
+}
+
+/* Banner de aviso del Paso 1 (ej. "ese horario acaba de ocuparse") */
+function mostrarAvisoPaso1(mensaje) {
+  const aviso = document.getElementById('paso1-aviso');
+  aviso.textContent = mensaje;
+  aviso.classList.remove('oculto');
+}
+
+function ocultarAvisoPaso1() {
+  const aviso = document.getElementById('paso1-aviso');
+  aviso.classList.add('oculto');
+  aviso.textContent = '';
 }
 
 
@@ -409,7 +490,6 @@ function renderConfirmacion() {
     <h3 class="conf-titulo">¡Ya casi! Confirma tu cita de valoración</h3>
     <p class="conf-detalle">
       ${s.fechaTexto || ''} · ${s.hora || ''}<br>
-      ${s.doctor ? `Con ${nombreCorto(s.doctor)}` : ''}
     </p>
     <div class="form-fila">
       <input type="text" id="booking-nombre" placeholder="Tu nombre completo" autocomplete="name">
