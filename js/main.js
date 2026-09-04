@@ -151,9 +151,6 @@ function renderHero() {
   /* Tarjetas de doctores en el visual */
   const visual = document.getElementById('hero-visual');
   const tarjetas = App.config.doctores.filter(doc => doc.activo !== false).map(doc => {
-    const opinionesTexto = doc.opiniones_doctoralia
-      ? `${icono('estrella', 'ic ic-estrella')} ${doc.opiniones_doctoralia} opiniones`
-      : `${icono('estrella', 'ic ic-estrella')} Doctoralia`;
     return `
       <div class="hero-tarjeta-doctor">
         <div class="htd-avatar">${renderFoto(doc.foto, doc.nombre, doc.foto_posicion)}</div>
@@ -161,7 +158,6 @@ function renderHero() {
           <div class="htd-nombre">${doc.nombre}</div>
           <div class="htd-especialidad">${doc.especialidad}</div>
         </div>
-        <div class="htd-opiniones">${opinionesTexto}</div>
       </div>
     `;
   }).join('');
@@ -703,10 +699,6 @@ function renderDoctores() {
   const grid = document.getElementById('doctores-grid');
 
   grid.innerHTML = App.config.doctores.filter(doc => doc.activo !== false).map(doc => {
-    const opinionesBtn = doc.opiniones_doctoralia
-      ? `<span class="td-opiniones-badge">${icono('estrella', 'ic ic-estrella')} ${doc.opiniones_doctoralia} reseñas</span>`
-      : '';
-
     return `
       <div class="tarjeta-doctor">
         <div class="td-cabecera">
@@ -727,7 +719,6 @@ function renderDoctores() {
             ${doc.doctoralia
               ? `<a href="${doc.doctoralia}" target="_blank" rel="noopener" class="td-btn-doctoralia">Ver perfil Doctoralia →</a>`
               : ''}
-            ${opinionesBtn}
           </div>
         </div>
       </div>
