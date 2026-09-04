@@ -11,7 +11,7 @@
     "maps_embed": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.6407355922374!2d-89.58232545581969!3d21.00703364676652!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f5677635f26f0d3%3A0xa12483068eebc0a5!2sDr.%20Juan%20Jos%C3%A9%20Castro%20Mosqueda%2C%20Cirujano%20Maxilofacial!5e0!3m2!1sen!2smx!4v1785884863993!5m2!1sen!2smx",
     "maps_link": "https://www.google.com/maps?cid=11611549803458838693",
     "horario": {
-      "lunes_viernes": "9:00 AM – 7:00 PM",
+      "lunes_viernes": "9:00 AM – 12:00 PM (mar y jue también 3:00 PM – 7:00 PM)",
       "sabado": "9:00 AM – 2:00 PM",
       "domingo": "Cerrado"
     },
@@ -63,12 +63,12 @@
       "color": "#3DBFBF",
       "servicios_ids": ["consulta-pediatrica", "selladores", "coronas-pediatricas", "pulpotomia", "ortopedia-dental", "odontologia-bebe", "extraccion-pediatrica"],
       "horario_disponible": {
-        "lunes": ["10:00", "11:00", "12:00", "16:00", "17:00"],
-        "martes": ["10:00", "11:00", "12:00", "16:00", "17:00"],
-        "miercoles": ["10:00", "11:00", "12:00", "16:00", "17:00"],
-        "jueves": ["10:00", "11:00", "12:00"],
-        "viernes": ["10:00", "11:00", "12:00", "16:00", "17:00"],
-        "sabado": ["9:00", "10:00", "11:00"]
+        "lunes": ["9:00", "10:00", "11:00"],
+        "martes": ["9:00", "10:00", "11:00", "15:00", "16:00", "17:00", "18:00"],
+        "miercoles": ["9:00", "10:00", "11:00"],
+        "jueves": ["9:00", "10:00", "11:00", "15:00", "16:00", "17:00", "18:00"],
+        "viernes": ["9:00", "10:00", "11:00"],
+        "sabado": ["9:00", "10:00", "11:00", "12:00", "13:00"]
       },
       "doctoralia": "https://www.doctoralia.com.mx/miriam-edith-preciado-oseguera/odontologo-pediatra/yucatan",
       "opiniones_doctoralia": 4,

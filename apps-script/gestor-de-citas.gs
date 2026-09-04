@@ -23,13 +23,13 @@ const CONFIG = {
   ANTICIPACION_MIN_HORAS: 6,
   VENTANA_DIAS: 60,
   HORARIOS: {
-    1: [[10, 13], [16, 19]],  // Lunes
-    2: [[10, 13], [16, 19]],  // Martes
-    3: [[10, 13], [16, 19]],  // Miércoles
-    4: [[10, 13], [16, 19]],  // Jueves
-    5: [[10, 13], [16, 19]],  // Viernes
-    6: [[10, 13]],            // Sábado
-    0: []                     // Domingo
+    1: [[9, 12]],           // Lunes
+    2: [[9, 12], [15, 19]], // Martes
+    3: [[9, 12]],           // Miércoles
+    4: [[9, 12], [15, 19]], // Jueves
+    5: [[9, 12]],           // Viernes
+    6: [[9, 14]],           // Sábado
+    0: []                   // Domingo
   },
   ZONA_HORARIA: 'America/Merida',
   PREFIJO_SIN_CONFIRMAR: '⚠️ SIN CONFIRMAR - ',
