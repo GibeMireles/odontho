@@ -26,6 +26,7 @@
   "doctores": [
     {
       "id": "castro",
+      "activo": false,
       "nombre": "Dr. Juan José Castro Mosqueda",
       "especialidad": "Cirujano Maxilofacial",
       "cedula": "6075249 / 3454816 / 3625220",
@@ -78,6 +79,7 @@
   "especialidades": [
     {
       "id": "maxilofacial",
+      "activo": false,
       "nombre": "Cirugía Maxilofacial",
       "descripcion": "Cirugía oral y facial de alta especialidad. Terceros molares, implantes, fracturas y más.",
       "icono": "assets/Icon-Maxi.png",
@@ -90,7 +92,7 @@
       "descripcion": "Limpieza, blanqueamiento, resinas, endodoncia y atención dental completa para adultos.",
       "icono": "assets/Icon-KidsA.jpg",
       "color": "#1E2D4E",
-      "doctor_ids": ["castro", "preciado"]
+      "doctor_ids": ["preciado"]
     },
     {
       "id": "kids",
@@ -105,6 +107,7 @@
   "servicios": [
     {
       "id": "terceros-molares",
+      "activo": false,
       "nombre": "Cirugía de Terceros Molares",
       "descripcion": "Extracción de muelas del juicio con técnica quirúrgica de precisión. Incluye valoración previa.",
       "precio_desde": 2800,
@@ -115,6 +118,7 @@
     },
     {
       "id": "implantes",
+      "activo": false,
       "nombre": "Implantes Dentales",
       "descripcion": "Implantes de titanio de grado médico con valoración incluida. Resultados permanentes.",
       "precio_desde": null,
@@ -125,6 +129,7 @@
     },
     {
       "id": "cirugia-ortognatica",
+      "activo": false,
       "nombre": "Cirugía Ortognática",
       "descripcion": "Corrección de deformidades de los maxilares que afectan la mordida y estética facial.",
       "precio_desde": null,
@@ -135,6 +140,7 @@
     },
     {
       "id": "fracturas",
+      "activo": false,
       "nombre": "Fracturas Faciales",
       "descripcion": "Atención y reparación de fracturas de mandíbula y huesos faciales.",
       "precio_desde": null,
@@ -145,6 +151,7 @@
     },
     {
       "id": "cirugia-quistes",
+      "activo": false,
       "nombre": "Cirugía de Quistes",
       "descripcion": "Extirpación de quistes y tumores de los maxilares con técnica mínimamente invasiva.",
       "precio_desde": null,
@@ -155,6 +162,7 @@
     },
     {
       "id": "frenectomia",
+      "activo": false,
       "nombre": "Frenectomía",
       "descripcion": "Corrección de frenillo lingual o labial que afecta la alimentación o el habla.",
       "precio_desde": null,
@@ -165,6 +173,7 @@
     },
     {
       "id": "urgencias",
+      "activo": false,
       "nombre": "Urgencias Dentales",
       "descripcion": "Atención inmediata para infecciones, abscesos, dolor agudo y traumatismos.",
       "precio_desde": null,
@@ -288,6 +297,7 @@
   "testimonios": [
     {
       "nombre": "José Gamboa",
+      "activo": false,
       "texto": "Muy profesional y explica todo a detalle. Muy amable en su trato.",
       "servicio": "Primera visita Cirugía Maxilofacial",
       "doctor_id": "castro",
@@ -296,6 +306,7 @@
     },
     {
       "nombre": "Evelyn Menéndez",
+      "activo": false,
       "texto": "Excelente trato, buena comunicación e información bien detallada.",
       "servicio": "Primera visita Cirugía Maxilofacial",
       "doctor_id": "castro",
@@ -304,6 +315,7 @@
     },
     {
       "nombre": "Estefanía Ravell",
+      "activo": false,
       "texto": "Excelente doctor, muy paciente con personas que tienen ansiedad y sensibilidad en la dentadura.",
       "servicio": "Consulta de valoración",
       "doctor_id": "castro",
@@ -343,6 +355,7 @@
     },
     {
       "pregunta": "¿Qué es la cirugía maxilofacial?",
+      "activo": false,
       "respuesta": "Es la especialidad que trata enfermedades, lesiones y defectos de la cara, boca y maxilares. El Dr. Castro tiene 10 años de experiencia en esta especialidad con formación militar."
     },
     {

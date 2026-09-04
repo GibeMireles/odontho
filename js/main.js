@@ -150,7 +150,7 @@ function renderHero() {
 
   /* Tarjetas de doctores en el visual */
   const visual = document.getElementById('hero-visual');
-  const tarjetas = App.config.doctores.map(doc => {
+  const tarjetas = App.config.doctores.filter(doc => doc.activo !== false).map(doc => {
     const opinionesTexto = doc.opiniones_doctoralia
       ? `${icono('estrella', 'ic ic-estrella')} ${doc.opiniones_doctoralia} opiniones`
       : `${icono('estrella', 'ic ic-estrella')} Doctoralia`;
@@ -189,15 +189,15 @@ function renderFoto(src, nombre, posicion) {
    ============================================================ */
 
 function renderTrustBar() {
-  const doctores = App.config.doctores;
+  const doctores = App.config.doctores.filter(d => d.activo !== false);
   const maxOp = Math.max(...doctores.map(d => d.opiniones_doctoralia || 0));
   /* Redondear hacia abajo a la centena: 404 → "400+" (evita leerse como error HTTP) */
   const opTexto = maxOp >= 100 ? `${Math.floor(maxOp / 100) * 100}+` : `${maxOp}+`;
 
   const items = [
     { num: opTexto,          etiqueta: 'Opiniones Doctoralia' },
-    { num: '19 años',        etiqueta: 'De experiencia' },
-    { num: '2',              etiqueta: 'Especialistas SEDENA' },
+    { num: '10+ años',       etiqueta: 'De experiencia' },
+    { num: String(doctores.length), etiqueta: 'Especialistas SEDENA' },
     { num: 'Mérida',         etiqueta: 'Yucatán' }
   ];
 
@@ -620,7 +620,7 @@ function volverAPaso1ConError(mensaje) {
 function renderEspecialidades() {
   const grid = document.getElementById('especialidades-grid');
 
-  grid.innerHTML = App.config.especialidades.map(esp => {
+  grid.innerHTML = App.config.especialidades.filter(esp => esp.activo !== false).map(esp => {
     const nombresDoctores = (esp.doctor_ids || [])
       .map(id => App.config.doctores.find(d => d.id === id)?.nombre)
       .filter(Boolean)
@@ -652,7 +652,7 @@ function renderEspecialidades() {
 function renderFiltros() {
   const contenedor = document.getElementById('filtros-servicios');
 
-  const filtros = [{ id: 'todos', nombre: 'Todos' }, ...App.config.especialidades];
+  const filtros = [{ id: 'todos', nombre: 'Todos' }, ...App.config.especialidades.filter(esp => esp.activo !== false)];
 
   contenedor.innerHTML = filtros.map(f => `
     <button class="filtro-btn ${f.id === 'todos' ? 'activo' : ''}"
@@ -678,7 +678,7 @@ function filtrarServicios(btn, filtro) {
 
 function renderServicios(filtro) {
   const grid = document.getElementById('servicios-grid');
-  let servicios = App.config.servicios;
+  let servicios = App.config.servicios.filter(s => s.activo !== false);
 
   if (filtro && filtro !== 'todos') {
     servicios = servicios.filter(s => s.especialidad_id === filtro);
@@ -702,7 +702,7 @@ function renderServicios(filtro) {
 function renderDoctores() {
   const grid = document.getElementById('doctores-grid');
 
-  grid.innerHTML = App.config.doctores.map(doc => {
+  grid.innerHTML = App.config.doctores.filter(doc => doc.activo !== false).map(doc => {
     const opinionesBtn = doc.opiniones_doctoralia
       ? `<span class="td-opiniones-badge">${icono('estrella', 'ic ic-estrella')} ${doc.opiniones_doctoralia} reseñas</span>`
       : '';
@@ -744,7 +744,7 @@ function renderTestimonios() {
   const grid = document.getElementById('testimonios-grid');
   const doctores = App.config.doctores;
 
-  grid.innerHTML = App.config.testimonios.map(t => {
+  grid.innerHTML = App.config.testimonios.filter(t => t.activo !== false).map(t => {
     const doctor = doctores.find(d => d.id === t.doctor_id);
     const iniciales = t.nombre.split(' ').map(p => p[0]).join('').slice(0, 2);
 
@@ -773,7 +773,7 @@ function renderTestimonios() {
 function renderFaq() {
   const lista = document.getElementById('faq-lista');
 
-  lista.innerHTML = App.config.faq.map((item, i) => `
+  lista.innerHTML = App.config.faq.filter(item => item.activo !== false).map((item, i) => `
     <div class="faq-item" id="faq-${i}" onclick="toggleFaq(${i})">
       <div class="faq-pregunta">
         ${item.pregunta}
@@ -803,7 +803,7 @@ function renderSelectServicios() {
   const select = document.getElementById('form-servicio');
   if (!select) return;
 
-  const opciones = App.config.servicios.map(s =>
+  const opciones = App.config.servicios.filter(s => s.activo !== false).map(s =>
     `<option value="${s.id}">${s.nombre}</option>`
   ).join('');
 
@@ -878,7 +878,7 @@ function renderFooter() {
 
   /* Especialidades */
   document.getElementById('pie-especialidades-links').innerHTML =
-    App.config.especialidades.map(e =>
+    App.config.especialidades.filter(e => e.activo !== false).map(e =>
       `<a href="#especialidades">${e.nombre}</a>`
     ).join('');
 
