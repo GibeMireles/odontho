@@ -360,6 +360,7 @@
     },
     {
       "pregunta": "¿La cirugía de terceros molares duele?",
+      "activo": false,
       "respuesta": "Se realiza bajo anestesia local. La mayoría de los pacientes no sienten dolor durante el procedimiento. El postoperatorio es manejable con los medicamentos indicados."
     },
     {
