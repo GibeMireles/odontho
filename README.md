@@ -8,8 +8,12 @@ Landing page para **OdonTHÓ Dentistas Militares**, clínica dental de especiali
 
 ## Estado actual (contexto para retomar)
 
-Última sesión de trabajo: **7 de agosto de 2026**. Resumen de lo que ya está en producción:
+Última sesión de trabajo: **4 de septiembre de 2026**. Resumen de lo que ya está en producción:
 
+- **Cirugía Maxilofacial y Dr. Castro pausados (no eliminados)**: por ahora el sitio solo ofrece Odontología General y OdonTHÓ Kids con la Dra. Preciado. Se implementó un flag `"activo": false` en `config.json` (especialidad, doctor, sus servicios, testimonios y la pregunta de FAQ asociada) en vez de borrar los datos — `js/main.js` filtra todo lo marcado como inactivo en cada sección (hero, barra de confianza, especialidades, servicios, doctores, testimonios, FAQ, footer y el `<select>` del formulario). Para reactivarlo cuando el Dr. Castro se sume de nuevo: cambiar esos `activo` a `true` y volver a agregar `"castro"` al `doctor_ids` de la especialidad `general`. Ver sección **"Contenido pausado (patrón `activo`)"** más abajo.
+- **Horario real de la Dra. Preciado actualizado**: Lun/Mié/Vie 9am–12pm, Mar/Jue 9am–12pm y 3pm–7pm, Sáb 9am–2pm. Se actualizó en las 3 fuentes: `CONFIG.HORARIOS` del Apps Script real (en script.google.com, ya desplegado y verificado contra el endpoint en vivo), `horario_disponible` de referencia en `config.json`, y el texto del horario que se muestra en el footer del sitio.
+- **Rediseño de tarjetas de doctor**: se quitó el conteo de reseñas de Doctoralia (hero y "Nuestros especialistas") porque con una sola doctora activa el número se veía escaso; se agrandó la tarjeta del hero (avatar, tipografía, padding) para que no quedara vacía.
+- **En proceso: Google Business Profile propio para "OdonTHÓ"** — hoy Maps solo tiene el perfil personal del Dr. Castro (con muchas reseñas). Se decidió crear un perfil nuevo para la clínica en vez de renombrar el existente (riesgo de suspensión por cambio de nombre/categoría en un perfil establecido, y las reseñas actuales hablan de él específicamente). Google permite varios perfiles en la misma dirección (clínica + cada practicante) si la señalética del consultorio respalda los nombres. Descripción del perfil ya redactada (ver checklist de pendientes). Cuando el perfil quede activo, falta actualizar `clinica.maps_embed` y `clinica.maps_link` en `config.json` para que apunten a OdonTHÓ en vez del perfil del Dr. Castro.
 - **Sistema de agenda completo (Calendar + Sheets + recordatorios)**: el booking del sitio, un Google Apps Script y un Google Sheets de registro trabajan juntos — ver la sección **"Sistema de Agenda y Citas"** más abajo para el detalle completo (arquitectura, componentes, mantenimiento).
 - **Booking conectado a Google Calendar real vía Apps Script**: el Paso 1 (Fecha) ya no usa `horario_disponible` de los doctores — hace `fetch` a `clinica.calendar_api_url` (`?action=disponibilidad`) y solo muestra como disponibles las fechas/horarios que devuelve el Calendar real, con loader mientras carga y fallback a WhatsApp si el fetch falla. Al confirmar, el Paso 2 hace `POST` (`action=agendar`) para crear el evento ("SIN CONFIRMAR") y registrarlo en Sheets, antes de abrir WhatsApp; si el horario ya se ocupó, regresa al Paso 1 con aviso y refresca la disponibilidad. `horario_disponible` de los doctores en `config.json` queda solo de referencia, sin uso activo. Ya no se muestra el doctor por horario (el Apps Script no lo informa).
 - **Recordatorios diarios por correo**: un segundo Apps Script revisa cada tarde las citas del día siguiente y le manda un correo a la clínica con un link de WhatsApp de un clic por paciente — no es 100% automático (falta WA Business API), pero ya no hay que revisar Calendar a mano.
@@ -22,9 +26,10 @@ Landing page para **OdonTHÓ Dentistas Militares**, clínica dental de especiali
 
 ### Pendiente / siguiente sesión
 
-1. **WhatsApp 100% automático** — hoy los recordatorios llegan por correo con un link de 1 clic; falta WhatsApp Business API para que salgan solos sin intervención humana — ver **Fase 1** del roadmap más abajo.
-2. **Foto real del Dr. Castro** — sigue sin subirse (`assets/dr-castro.jpg` no existe); hoy cae al fallback de iniciales "JC".
-3. **SEO local** y **dominio personalizado** — ver Roadmap.
+1. **Terminar el Google Business Profile de "OdonTHÓ"** — completar categoría, horario, fotos y pasar la verificación de Google; luego mandar el link/CID nuevo para actualizar `clinica.maps_embed` y `clinica.maps_link` en `config.json`.
+2. **WhatsApp 100% automático** — hoy los recordatorios llegan por correo con un link de 1 clic; falta WhatsApp Business API para que salgan solos sin intervención humana — ver **Fase 1** del roadmap más abajo.
+3. **Foto real del Dr. Castro** — sigue sin subirse (`assets/dr-castro.jpg` no existe); hoy cae al fallback de iniciales "JC". Sigue aplicando aunque esté pausado, para cuando se reactive.
+4. **SEO local** y **dominio personalizado** — ver Roadmap.
 
 ---
 
@@ -145,7 +150,7 @@ recordatorios listos para enviar por WhatsApp.
   - `GET ?action=disponibilidad&desde=YYYY-MM-DD&hasta=YYYY-MM-DD` → huecos libres
   - `POST {action:'agendar', nombre, telefono, fecha, hora}` → crea la cita + la registra en Sheets
 - Config: valoración de 30 min, anticipación mínima 6 h, ventana de 60 días
-- Horarios: Lun–Vie 10–13 y 16–19, Sáb 10–13, Dom cerrado (editable en `CONFIG.HORARIOS`)
+- Horarios (Dra. Preciado, único doctor activo): Lun/Mié/Vie 9–12, Mar/Jue 9–12 y 15–19, Sáb 9–14, Dom cerrado (editable en `CONFIG.HORARIOS`)
 - URL del Web App: en `config.json` → `clinica.calendar_api_url` (real, pública por diseño — ver nota arriba) y también copiada en `CONFIG-PRIVADO.md` para referencia
 
 **2. Apps Script "Recordatorios"** (`apps-script/recordatorios.gs`)
@@ -200,6 +205,21 @@ Toda la información de la clínica vive en `config.json`. Para actualizar:
   ]
 }
 ```
+
+---
+
+## Contenido pausado (patrón `activo`)
+
+Cuando una especialidad, doctor, servicio, testimonio o pregunta de FAQ deja de ofrecerse **temporalmente** (ej. un doctor que se va y puede regresar más adelante), no se borra del `config.json` — se marca con `"activo": false`. `js/main.js` filtra (`.filter(x => x.activo !== false)`) todo lo marcado así antes de renderizar cada sección, así que cualquier entrada sin el campo `activo` sigue mostrándose normal.
+
+**Uso actual:** especialidad `maxilofacial`, doctor `castro`, sus 7 servicios, sus 3 testimonios, y la FAQ de "¿Qué es la cirugía maxilofacial?" y "¿La cirugía de terceros molares duele?" — todo pausado mientras solo se ofrece Odontología General y OdonTHÓ Kids.
+
+**Para reactivar cuando el Dr. Castro (u otro doctor) regrese:**
+1. Cambiar cada `"activo": false` relevante a `"activo": true` (o borrar el campo) en `config.json`
+2. Volver a agregar su `id` al `doctor_ids` de las especialidades que le apliquen (ej. `"castro"` en `general`)
+3. Si vuelve a tener horario propio de citas, agregarlo también a `CONFIG.HORARIOS` en el Apps Script real (script.google.com) — hoy solo tiene el horario de la Dra. Preciado
+
+Si en cambio algo se quita **para siempre**, sí se borra directo del `config.json` (el historial en git ya sirve de respaldo).
 
 ---
 
@@ -284,8 +304,11 @@ Para dominio propio: **Settings → Pages → Custom domain**.
 - [x] Google Maps embed real + botón "Cómo llegar" (usando CID del negocio)
 - [x] Foto real de la Dra. Preciado
 - [x] Booking simplificado a cita de valoración (sin selección de servicio)
+- [x] Cirugía Maxilofacial y Dr. Castro pausados con patrón `activo` (reversible)
+- [x] Horario real de la Dra. Preciado (Apps Script + config.json + footer)
 - [ ] Foto real del Dr. Castro
 - [ ] SEO local (meta tags, Schema.org, Google Business)
+- [ ] Google Business Profile propio para "OdonTHÓ" (en proceso — falta verificación de Google; ver "Pendiente / siguiente sesión")
 - [ ] Dominio personalizado `odontho.mx`
 - [ ] WhatsApp Business API (recordatorios 100% automáticos, futuro)
 - [ ] Agente de IA en WhatsApp (futuro, ver Fase 3)
@@ -359,9 +382,9 @@ Paciente escribe a WA
 
 **OdonTHÓ — Dentistas Militares**  
 Av. Yucatán 351, Col. Los Pinos, Mérida, Yuc. 97138  
-📞 999 000 0000 · 💬 WhatsApp
+📞 999 446 9926 · 💬 WhatsApp
 
-| Doctor | Especialidad | Doctoralia |
-|---|---|---|
-| Dr. Juan José Castro Mosqueda | Cirujano Maxilofacial | [Ver perfil](https://www.doctoralia.com.mx/juan-jose-castro-mosqueda/cirujano-maxilofacial-dentista-odontologo/yucatan) |
-| Dra. Miriam Edith Preciado Oseguera | Odontopediatra | [Ver perfil](https://www.doctoralia.com.mx/miriam-edith-preciado-oseguera/odontologo-pediatra/yucatan) |
+| Doctor | Especialidad | Doctoralia | Estado |
+|---|---|---|---|
+| Dr. Juan José Castro Mosqueda | Cirujano Maxilofacial | [Ver perfil](https://www.doctoralia.com.mx/juan-jose-castro-mosqueda/cirujano-maxilofacial-dentista-odontologo/yucatan) | Pausado en el sitio (`activo: false`) |
+| Dra. Miriam Edith Preciado Oseguera | Odontopediatra | [Ver perfil](https://www.doctoralia.com.mx/miriam-edith-preciado-oseguera/odontologo-pediatra/yucatan) | Activa |
