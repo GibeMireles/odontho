@@ -11,7 +11,7 @@ Landing page para **OdonTHÓ Dentistas Militares**, clínica dental de especiali
 Última sesión de trabajo: **8 de septiembre de 2026**. Resumen de lo que ya está en producción:
 
 - **Banner de confianza simplificado**: se quitaron los stats "Opiniones Doctoralia" y "Especialistas SEDENA" (ya no aportaban con una sola doctora activa); quedan solo "10+ años de experiencia" y "Mérida, Yucatán", con el grid ajustado de 4 a 2 columnas para que no queden huecos.
-- **Google Analytics (GA4) listo para activarse**: se agregó `clinica.google_analytics_id` en `config.json` (hoy en `null`) y `initGoogleAnalytics()` en `main.js`, que inyecta el script de `gtag.js` solo si hay un ID configurado — nada hardcodeado en el HTML, mismo patrón data-driven del resto del sitio. Falta crear la cuenta de GA4 y pegar el Measurement ID (`G-XXXXXXXXXX`) en ese campo — ver "Pendiente".
+- **Google Analytics (GA4) activo**: `clinica.google_analytics_id` en `config.json` tiene el Measurement ID real (`G-XV2S537RW2`) y `initGoogleAnalytics()` en `main.js` inyecta `gtag.js` al cargar — nada hardcodeado en el HTML, mismo patrón data-driven del resto del sitio. Verificado en local que carga el script y registra los eventos `js`/`config` en `dataLayer`.
 - **Cirugía Maxilofacial y Dr. Castro pausados (no eliminados)**: por ahora el sitio solo ofrece Odontología General y OdonTHÓ Kids con la Dra. Preciado. Se implementó un flag `"activo": false` en `config.json` (especialidad, doctor, sus servicios, testimonios y la pregunta de FAQ asociada) en vez de borrar los datos — `js/main.js` filtra todo lo marcado como inactivo en cada sección (hero, barra de confianza, especialidades, servicios, doctores, testimonios, FAQ, footer y el `<select>` del formulario). Para reactivarlo cuando el Dr. Castro se sume de nuevo: cambiar esos `activo` a `true` y volver a agregar `"castro"` al `doctor_ids` de la especialidad `general`. Ver sección **"Contenido pausado (patrón `activo`)"** más abajo.
 - **Horario real de la Dra. Preciado actualizado**: Lun/Mié/Vie 9am–12pm, Mar/Jue 9am–12pm y 3pm–7pm, Sáb 9am–2pm. Se actualizó en las 3 fuentes: `CONFIG.HORARIOS` del Apps Script real (en script.google.com, ya desplegado y verificado contra el endpoint en vivo), `horario_disponible` de referencia en `config.json`, y el texto del horario que se muestra en el footer del sitio.
 - **Rediseño de tarjetas de doctor**: se quitó el conteo de reseñas de Doctoralia (hero y "Nuestros especialistas") porque con una sola doctora activa el número se veía escaso; se agrandó la tarjeta del hero (avatar, tipografía, padding) para que no quedara vacía.
@@ -29,10 +29,9 @@ Landing page para **OdonTHÓ Dentistas Militares**, clínica dental de especiali
 ### Pendiente / siguiente sesión
 
 1. **Terminar el Google Business Profile de "OdonTHÓ"** — completar categoría, horario, fotos y pasar la verificación de Google; luego mandar el link/código de "Insertar un mapa" nuevo para actualizar `clinica.maps_embed` y `clinica.maps_link` en `config.json` (en espera de ese link).
-2. **Activar Google Analytics** — crear la cuenta de GA4 y pegar el Measurement ID en `clinica.google_analytics_id` de `config.json`; el código ya está listo para tomarlo (ver `initGoogleAnalytics()` en `main.js`).
-3. **WhatsApp 100% automático** — hoy los recordatorios llegan por correo con un link de 1 clic; falta WhatsApp Business API para que salgan solos sin intervención humana — ver **Fase 1** del roadmap más abajo.
-4. **Foto real del Dr. Castro** — sigue sin subirse (`assets/dr-castro.jpg` no existe); hoy cae al fallback de iniciales "JC". Sigue aplicando aunque esté pausado, para cuando se reactive.
-5. **SEO local** y **dominio personalizado** — ver Roadmap.
+2. **WhatsApp 100% automático** — hoy los recordatorios llegan por correo con un link de 1 clic; falta WhatsApp Business API para que salgan solos sin intervención humana — ver **Fase 1** del roadmap más abajo.
+3. **Foto real del Dr. Castro** — sigue sin subirse (`assets/dr-castro.jpg` no existe); hoy cae al fallback de iniciales "JC". Sigue aplicando aunque esté pausado, para cuando se reactive.
+4. **SEO local** y **dominio personalizado** — ver Roadmap.
 
 ---
 
@@ -311,7 +310,7 @@ Para dominio propio: **Settings → Pages → Custom domain**.
 - [x] Cirugía Maxilofacial y Dr. Castro pausados con patrón `activo` (reversible)
 - [x] Horario real de la Dra. Preciado (Apps Script + config.json + footer)
 - [x] Banner de confianza simplificado (2 datos, sin huecos en el grid)
-- [x] Google Analytics (GA4) listo para activarse (falta solo el Measurement ID)
+- [x] Google Analytics (GA4) activo con Measurement ID real
 - [ ] Foto real del Dr. Castro
 - [ ] SEO local (meta tags, Schema.org, Google Business)
 - [ ] Google Business Profile propio para "OdonTHÓ" (en proceso — falta verificación de Google; ver "Pendiente / siguiente sesión")
