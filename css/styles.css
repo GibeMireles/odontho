@@ -1348,8 +1348,8 @@ input.campo-error, select.campo-error {
   .hero-botones .btn-principal,
   .hero-botones .btn-whatsapp { width: auto; }
 
-  /* TRUST BAR: 4 columnas */
-  .barra-confianza { grid-template-columns: repeat(4, 1fr); }
+  /* TRUST BAR: 2 columnas */
+  .barra-confianza { grid-template-columns: repeat(2, 1fr); }
   .confianza-num   { font-size: 28px; }
 
   /* ESPECIALIDADES: 3 columnas */

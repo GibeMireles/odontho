@@ -86,6 +86,7 @@ async function init() {
     const res = await fetch('config.json');
     if (!res.ok) throw new Error('No se pudo cargar config.json');
     App.config = await res.json();
+    initGoogleAnalytics();
     renderTodo();
     fetchDisponibilidad();
   } catch (e) {
@@ -95,6 +96,22 @@ async function init() {
       <p>Abre este proyecto desde un servidor local o GitHub Pages.</p>
     </div>`;
   }
+}
+
+/* Carga Google Analytics (GA4) solo si hay un ID configurado en clinica.google_analytics_id */
+function initGoogleAnalytics() {
+  const id = App.config.clinica.google_analytics_id;
+  if (!id) return;
+
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+  document.head.appendChild(script);
+
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { window.dataLayer.push(arguments); };
+  window.gtag('js', new Date());
+  window.gtag('config', id);
 }
 
 function renderTodo() {
@@ -185,15 +202,8 @@ function renderFoto(src, nombre, posicion) {
    ============================================================ */
 
 function renderTrustBar() {
-  const doctores = App.config.doctores.filter(d => d.activo !== false);
-  const maxOp = Math.max(...doctores.map(d => d.opiniones_doctoralia || 0));
-  /* Redondear hacia abajo a la centena: 404 → "400+" (evita leerse como error HTTP) */
-  const opTexto = maxOp >= 100 ? `${Math.floor(maxOp / 100) * 100}+` : `${maxOp}+`;
-
   const items = [
-    { num: opTexto,          etiqueta: 'Opiniones Doctoralia' },
     { num: '10+ años',       etiqueta: 'De experiencia' },
-    { num: String(doctores.length), etiqueta: 'Especialistas SEDENA' },
     { num: 'Mérida',         etiqueta: 'Yucatán' }
   ];
 
